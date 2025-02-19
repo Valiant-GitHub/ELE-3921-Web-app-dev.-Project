@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign up</title>
+    <link rel="stylesheet" href="">
+</head>
+<body>
+<div class="sign">
+    <form method="post">
+            <select>
+                <option value="artist">Artist</option>
+                <option value="fan">Fan</option>
+                <option value="venue">Venue</option>
+            </select><br>
+            <input type="text" name="first_name" required placeholder="First name">
+            <input type="text" name="last_name" required placeholder="Last name">
+            <input type="email" name="email" required placeholder="Email">
+            <input type="text" name="username" required unique placeholder="Username">
+            <input type="password" name="password" required minlength="8" placeholder="Password">
+            <input type="password" name="confirm_password" required placeholder="Confirm password">
+            <button type="submit">Sign up</button>
+            <p>Already have an account? <a href="">Log in</a></p>
+    </form>
+</div>
+</body>
+</html>

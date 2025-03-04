@@ -23,15 +23,21 @@ class Genre(models.Model):
         return self.genrename
 
 class Fan(models.Model):
+    # One-to-one relationship with user and cascade to delete the fan if the user is deleted.
+    # Related name is used to access the fan object from the user object.
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="fan_user")
     favartists = models.ManyToManyField(User, related_name="fan_favartists")
     eventsattended = models.ManyToManyField("Events", through="Tickets", related_name="fan_eventsattended")
+    # The genres the user follows for events.
     genres = models.ManyToManyField(Genre, related_name="fans")
     def __str__(self):
         return self.user.profilename
 
 class Artist(models.Model):
+    # One-to-one relationship with user and cascade to delete the artist if the user is deleted.
+    # Related name is used to access the artist object from the user object.
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="artist_user")
+        # Artist image could be used to differentiate between a user image and an artist's promo image.
     artistimage = models.ImageField(upload_to="media/artistpics/", default="media/artistpics/default.png", null=True, blank=True)
     artistfans = models.ManyToManyField(User, related_name="artist_fans")
     genres = models.ManyToManyField(Genre, related_name="artists")
@@ -39,6 +45,8 @@ class Artist(models.Model):
         return self.user.profilename
 
 class Venue(models.Model):
+    # One-to-one relationship with user and cascade to delete the venue if the user is deleted.
+    # Related name is used to access the venue object from the user object.
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="venue_user")
     location = models.ForeignKey("Location", on_delete=models.CASCADE, related_name="venue_location")
     venuecapacity = models.IntegerField()
@@ -49,6 +57,7 @@ class Venue(models.Model):
     def __str__(self):
         return self.user.profilename
 
+#location model for venues and events, helps adhere to relational database principles
 class Location(models.Model):
     address = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
@@ -67,6 +76,7 @@ class Events(models.Model):
     EventArtists = models.ManyToManyField(Artist, through="EventArtists", related_name="event_artists")
     eventvenue = models.ForeignKey(Venue, on_delete=models.CASCADE, related_name="event_venue")
     ticketsold = models.IntegerField(default=0)
+    # Not sure if we should create the metric for the progress bar here as a function or in the view.
     ticketprice = models.DecimalField(max_digits=5, decimal_places=2)
     genres = models.ManyToManyField(Genre, related_name="events")
     def __str__(self):

@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from .models import *
 
 # Create your views here.
 def home(request):
@@ -6,7 +7,8 @@ def home(request):
 
 
 def events(request):    
-    return render(request, "events.html")
+    events = Events.objects.all()
+    return render(request, "events.html", {"events": events})
 
 def about(request):
     return render(request, "about.html")

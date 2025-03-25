@@ -13,7 +13,7 @@ class User(AbstractUser):
     role = models.CharField(max_length=100, choices=choices, default="fan")
     profilename = models.CharField(max_length=100) # Name on profile different from username and full name
     bio = models.TextField(max_length=1000, null=True, blank=True)
-    profilepic = models.ImageField(upload_to="media/profilepics/", default="media/profilepics/default.png", null=True, blank=True)    
+    profilepic = models.ImageField(upload_to="profilepics/", default="profilepics/default.png", null=True, blank=True)    
     def __str__(self):
         return self.username
 
@@ -45,7 +45,7 @@ class Artist(models.Model):
     # Related name is used to access the artist object from the user object.
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="artist_user")
         # Artist image could be used to differentiate between a user image and an artist's promo image.
-    artistimage = models.ImageField(upload_to="media/artistpics/", default="media/artistpics/default.png", null=True, blank=True)
+    artistimage = models.ImageField(upload_to="artistpics/", default="artistpics/default.png", null=True, blank=True)
     artistfans = models.ManyToManyField(User, related_name="artist_fans", null=True, blank=True)
     genres = models.ManyToManyField(Genre, related_name="artists", null=True, blank=True)
     def __str__(self):
@@ -57,8 +57,8 @@ class Venue(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="venue_user")
     location = models.ForeignKey("Location", on_delete=models.CASCADE, related_name="venue_location")
     venuecapacity = models.IntegerField()
-    venueimage = models.ImageField(upload_to="media/venuepics/", default="media/venuepics/default.png", null=True, blank=True)
-    venuephotoreel = models.ImageField(upload_to="media/venuepics/", default="media/venuepics/default.png", null=True, blank=True)
+    venueimage = models.ImageField(upload_to="venuepics/", default="venuepics/default.png", null=True, blank=True)
+    venuephotoreel = models.ImageField(upload_to="venuepics/", default="venuepics/default.png", null=True, blank=True)
     venuefans = models.ManyToManyField(User, related_name="venue_fans", null=True, blank=True)
     genres = models.ManyToManyField(Genre, related_name="venues", null=True, blank=True)
     def __str__(self):
@@ -79,7 +79,7 @@ class Events(models.Model):
     eventtime = models.TimeField()
     location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name="events")
     eventdescription = models.TextField()
-    eventimage = models.ImageField(upload_to="media/eventpics/", default="media/eventpics/default.png", null=True, blank=True)
+    eventimage = models.ImageField(upload_to="eventpics/", default="eventpics/default.png", null=True, blank=True)
     EventArtists = models.ManyToManyField(Artist, through="EventArtists", related_name="event_artists")
     eventvenue = models.ForeignKey(Venue, on_delete=models.CASCADE, related_name="event_venue")
     ticketsold = models.IntegerField(default=0)

@@ -1,0 +1,26 @@
+{%extends "base.html"%}
+
+{%block content%}
+
+    <div class="profilepic"><img src="{{user.profilepic.url}}" alt="profilepicture"></div>
+    
+    <p>Role: {{user.role}}</p>
+    <p>Public name: {{user.profilename}}</p>
+
+
+    {% if user.role == "fan" %}
+        <div class="favartists">
+            <h1>Your favorite artists:</h1>
+            {% for artist in user.fan_user.favartists.all %}
+                <p>{{ artist.profilename }}</p>
+            {% endfor %}
+        </div>
+        <div class="favgenres">
+            <h1>Your favorite genres:</h1>
+            {% for genre in user.fan_user.genres.all %}
+                <p>{{ genre.genrename }}</p>
+            {% endfor %}
+        </div>
+    {% elif user.role="artist"%}
+        
+{%endblock%}

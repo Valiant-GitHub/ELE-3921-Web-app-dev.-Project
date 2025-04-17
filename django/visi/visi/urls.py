@@ -29,5 +29,6 @@ urlpatterns = [
     path("about/", views.about, name="about"),
     path("profile/", views.profile, name="profile"),
     path("signup/", views.signup, name="signup"),
+    path("createprofile/", views.createprofile, name="create_profile"),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -30,5 +30,6 @@ urlpatterns = [
     path("profile/", views.profile, name="profile"),
     path("signup/", views.signup, name="signup"),
     path("createprofile/", views.createprofile, name="create_profile"),
+    path("availability/", views.availability, name="availability"),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

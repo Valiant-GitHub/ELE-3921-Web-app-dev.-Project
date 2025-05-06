@@ -3,7 +3,7 @@ from .models import *
 from forms import *
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-
+    
 
 # Create your views here.
 def home(request):
@@ -56,3 +56,15 @@ def createprofile(request):
         form = form_class()
 
     return render(request, 'profilecreation.html', {'form': form})
+
+@login_required
+def availability(request):
+    if request.method == 'POST':
+        form = AvailabilityForm(request.POST, user=request.user)  # Pass the user here
+        if form.is_valid():
+            form.save()
+            # Redirect or render a success message
+    else:
+        form = AvailabilityForm(user=request.user)  # Pass the user here
+
+    return render(request, 'availability.html', {'form': form})

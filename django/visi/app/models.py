@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 
@@ -50,6 +51,7 @@ class Artist(models.Model):
     genres = models.ManyToManyField(Genre, related_name="artists", null=True, blank=True)
     def __str__(self):
         return self.user.profilename
+    
 
 class Venue(models.Model):
     # One-to-one relationship with user and cascade to delete the venue if the user is deleted.
@@ -72,6 +74,47 @@ class Location(models.Model):
     zipcode = models.CharField(max_length=10)
     def __str__(self):
         return f"{self.address}, {self.city}, {self.country}, {self.zipcode}"
+    
+class Availability(models.Model):
+    # Define TYPE_CHOICES above the type field
+    TYPE_CHOICES = [
+        ('artist', 'Artist'),
+        ('venue', 'Venue'),
+    ]
+    type = models.CharField(max_length=10, choices=TYPE_CHOICES)
+    artist = models.ForeignKey(Artist, on_delete=models.CASCADE, null=True, blank=True, related_name="availability_artist")
+    venue = models.ForeignKey(Venue, on_delete=models.CASCADE, null=True, blank=True, related_name="availability_venue")
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+    date = models.DateField()
+    description = models.TextField()
+
+    class Meta:
+        ordering = ['date', 'start_time']  # Default sorting by date and start time
+        constraints = [
+            models.CheckConstraint(
+                check=(
+                    models.Q(artist__isnull=False, venue__isnull=True) |
+                    models.Q(artist__isnull=True, venue__isnull=False)
+                ),
+                name="artist_or_venue_only"  # Ensures only one of artist or venue is set
+            )
+        ]
+
+    def clean(self):
+        # Ensure that either artist or venue is set, but not both
+        if not (self.artist or self.venue):
+            raise ValidationError("Either artist or venue must be set.")
+        if self.artist and self.venue:
+            raise ValidationError("Only one of artist or venue can be set.")
+        super().clean()
+
+    def __str__(self):
+        if self.type == 'artist' and self.artist:
+            return f"{self.artist.user.profilename} available from {self.start_time} to {self.end_time}"
+        elif self.type == 'venue' and self.venue:
+            return f"{self.venue.user.profilename} available from {self.start_time} to {self.end_time}"
+        return "Availability record"
 
 class Events(models.Model):
     eventname = models.CharField(max_length=100)

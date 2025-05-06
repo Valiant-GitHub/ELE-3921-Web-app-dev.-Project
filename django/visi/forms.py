@@ -41,3 +41,24 @@ class DoormanProfileForm(forms.ModelForm):
     class Meta:
         model = Doorman
         fields = [] 
+
+#form for artists and venues to post availability, it should include start time, end time, date, location, description. the form automatically gets the user from the session and sets it to the artist or venue field.
+class AvailabilityForm(forms.ModelForm):
+    class Meta:
+        model = Availability
+        fields = ['start_time', 'end_time', 'date', 'description']
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user')  # Representing the user who is logged in and is creating the availability.
+        super().__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        # Set the artist or venue based on the user's role
+        if self.user.role == 'artist':
+            instance.artist = self.user.artist_user
+        elif self.user.role == 'venue':
+            instance.venue = self.user.venue_user
+        if commit:
+            instance.save()
+        return instance

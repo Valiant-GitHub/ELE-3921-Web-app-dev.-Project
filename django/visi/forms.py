@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from app.models import *
+from django.forms import DateInput, TimeInput
+
 
 class SignUpForm(UserCreationForm):
     profilename = forms.CharField(max_length=100, required=True, label="Profile Name")
@@ -18,6 +20,8 @@ class SignUpForm(UserCreationForm):
         user.bio = self.cleaned_data['bio']
         user.profilepic = self.cleaned_data['profilepic']
         user.role = self.cleaned_data['role']
+        if not self.cleaned_data.get('profilepic'):
+            user.profilepic = "profilepics/default.png"
         if commit:
             user.save()
         return user
@@ -43,10 +47,16 @@ class DoormanProfileForm(forms.ModelForm):
         fields = [] 
 
 #form for artists and venues to post availability, it should include start time, end time, date, location, description. the form automatically gets the user from the session and sets it to the artist or venue field.
+
 class AvailabilityForm(forms.ModelForm):
     class Meta:
         model = Availability
         fields = ['start_time', 'end_time', 'date', 'description']
+        widgets = {
+            'start_time': TimeInput(attrs={'type': 'time'}),
+            'end_time': TimeInput(attrs={'type': 'time'}),
+            'date': DateInput(attrs={'type': 'date'}),
+        }
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user')  # Representing the user who is logged in and is creating the availability.

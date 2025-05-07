@@ -20,6 +20,8 @@ from django.urls import path
 from app import views
 from django.conf.urls.static import static
 from django.conf import settings
+from django.contrib.auth.views import LoginView, LogoutView
+
 
 
 urlpatterns = [
@@ -29,7 +31,9 @@ urlpatterns = [
     path("about/", views.about, name="about"),
     path("profile/", views.profile, name="profile"),
     path("signup/", views.signup, name="signup"),
-    path("createprofile/", views.createprofile, name="create_profile"),
+    path("createprofile/", views.createprofile, name="createprofile"),
     path("availability/", views.availability, name="availability"),
+    path('login/', LoginView.as_view(template_name='login.html'), name='login'),
+    path('logout/', LogoutView.as_view(), name='logout'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

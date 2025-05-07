@@ -21,6 +21,17 @@
                 <p>{{ genre.genrename }}</p>
             {% endfor %}
         </div>
-    {% elif user.role="artist"%}
+    {% elif user.role == "artist"%}
         
+        <div class="artistinfo">
+            <h1>Your artist information:</h1>
+            <p>Artist name: {{user.artist_user.artistname}}</p>
+            <p>Artist genre: {{user.artist_user.genre}}</p>
+            <p>Artist description: {{user.artist_user.description}}</p>
+        </div>
+    {% endif %}
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+    </form>
 {%endblock%}

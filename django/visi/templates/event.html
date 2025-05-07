@@ -1,0 +1,16 @@
+{% extends "base.html"%}
+
+{% block content %}
+<div class="event">
+    <h2>{{ event.eventname }}</h2>
+    <p>{{ event.eventdescription }}</p>
+    <p>{{ event.eventdate }}</p>
+    <p>Location: {{ event.location }}</p>
+    <p>Time: {{ event.time }}</p>
+    <p>Duration: {{ event.duration }}</p>
+    <p>Price: {{ event.price }}</p>
+    <form method="post" action="{% url 'buyticket' event.id %}">
+        {% csrf_token %}
+        <button type="submit">Buy Ticket</button>
+    </form>
+{% endblock %}

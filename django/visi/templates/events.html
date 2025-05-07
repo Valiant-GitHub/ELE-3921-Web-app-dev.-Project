@@ -2,7 +2,7 @@
 {%block content%}
 {% for event in events %}
     <div class="event">
-        <h2>{{ event.eventname }}</h2>
+        <h2><a href="{% url 'event' event.id %}">{{ event.eventname }}</a></h2>
         <p>{{ event.eventdescription }}</p>
         <p>{{ event.eventdate }}</p>
     </div>

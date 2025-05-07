@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="ticket">
+        <h1>Ticket Details</h1>
+        <p><strong>Event:</strong> {{ ticket.event.eventname }}</p>
+        <p><strong>Date:</strong> {{ ticket.event.eventdate }}</p>
+        <p><strong>Time:</strong> {{ ticket.event.eventtime }}</p>
+        <p><strong>Location:</strong> {{ ticket.event.location }}</p>
+        <p><strong>Ticket Number:</strong> {{ ticket.ticketnumber }}</p>
+        <p><strong>Used:</strong> {{ ticket.is_used|yesno:"Yes,No" }}</p>
+    </div>
+{% endblock %}

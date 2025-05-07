@@ -1,4 +1,6 @@
-from django.shortcuts import render, redirect
+import random
+from django.http import HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from forms import *
 from django.contrib.auth import login
@@ -14,9 +16,38 @@ def events(request):
     events = Events.objects.all()
     return render(request, "events.html", {"events": events})
 
+def event(request, event_id):
+    event = get_object_or_404(Events, id=event_id)
+    return render(request, "event.html", {"event": event})
+
+@login_required
+def buyticket(request, event_id):
+    event = get_object_or_404(Events, id=event_id)
+    if request.method == "POST":
+        if not hasattr(request.user, 'fan_user'):
+            return HttpResponse("Only fans can buy tickets.")
+
+        while True:
+            ticketnumber = random.randint(10**15, 10**16 - 1)  
+            if not Tickets.objects.filter(ticketnumber=ticketnumber).exists():
+                break
+
+        ticket = Tickets.objects.create(
+            event=event,
+            fan=request.user.fan_user,
+            ticketnumber=ticketnumber
+        )
+
+        event.ticketsold += 1
+        event.save()
+
+        return redirect('ticket', ticketnumber=ticket.id)
+    return HttpResponse("Theres an issue.")
+
 def about(request):
     return render(request, "about.html")
 
+@login_required 
 def profile(request):
     return render(request, "profile.html")
 
@@ -31,6 +62,13 @@ def signup(request):
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
 
+@login_required
+def ticketdetails(request, ticketnumber):
+    ticket = get_object_or_404(Tickets, id=ticketnumber)
+    if ticket.fan.user != request.user:
+        return HttpResponse("You do not have permission to view this ticket.")
+    
+    return render(request, "ticket.html", {"ticket": ticket})
 @login_required
 def createprofile(request):
     user = request.user

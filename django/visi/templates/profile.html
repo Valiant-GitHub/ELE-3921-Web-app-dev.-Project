@@ -21,6 +21,15 @@
                 <p>{{ genre.genrename }}</p>
             {% endfor %}
         </div>
+        <div class="tickets">
+            <h1>Your purchased tickets:</h1>
+            {% for ticket in user.fan_user.tickets.all %}
+                <p>
+                    <a href="{% url 'ticket' ticket.id %}">{{ ticket.event.eventname }}</a>
+                </p>
+            {% endfor %}
+        
+        </div>
     {% elif user.role == "artist"%}
         
         <div class="artistinfo">

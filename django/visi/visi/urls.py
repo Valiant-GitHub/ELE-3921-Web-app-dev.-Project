@@ -33,6 +33,7 @@ urlpatterns = [
     path("about/", views.about, name="about"),
     path("profile/", views.profile, name="profile"),
     path("profile/ticket/<int:ticketnumber>", views.ticketdetails, name="ticket"),
+    path('profile/edit/', views.editprofile, name="editprofile"),
     path("signup/", views.signup, name="signup"),
     path("createprofile/", views.createprofile, name="createprofile"),
     path("availability/", views.availability, name="availability"),

@@ -1,7 +1,7 @@
 {% extends "base.html"%}
 
 {% block content %}
-<div class="event">
+<div class="container">
     <h2>{{ event.eventname }}</h2>
     <p>{{ event.eventdescription }}</p>
     <p>{{ event.eventdate }}</p>
@@ -13,4 +13,5 @@
         {% csrf_token %}
         <button type="submit">Buy Ticket</button>
     </form>
+</div>
 {% endblock %}

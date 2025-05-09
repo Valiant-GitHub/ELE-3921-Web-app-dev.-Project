@@ -140,3 +140,15 @@ def editprofile(request):
         "profilepic": profilepic,
         "rolespecific": rolespecific,
     })
+
+def artistprofile(request, artist_id):
+    artist = get_object_or_404(Artist, id=artist_id)
+    events = Events.objects.filter(EventArtists=artist)
+    return render(request, "artistprofile.html",{"artist":artist, "events":events})
+
+
+def venueprofile(request, venue_id):
+    venue = get_object_or_404(Venue, id=venue_id)
+    events = Events.objects.filter(eventvenue=venue)
+    photoreel = [venue.venuephotoreel]
+    return render(request, "venueprofile.html",{"venue":venue, "events":events, "photoreel":photoreel})

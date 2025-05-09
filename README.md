@@ -8,3 +8,6 @@ Created default profile picture using copilot
 
 ## Dependencies 
 Pillow  -   pip install Pillow
+
+## "Stolen code":
+Used w3schools template for slideshows: https://www.w3schools.com/w3css/tryit.asp?filename=tryw3css_slideshow_dots2

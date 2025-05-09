@@ -39,5 +39,8 @@ urlpatterns = [
     path("availability/", views.availability, name="availability"),
     path('login/', LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
+    path("artist/<int:artist_id>/", views.artistprofile, name="artistprofile"),
+    path("venue/<int:venue_id>/", views.venueprofile, name="venueprofile")
+
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

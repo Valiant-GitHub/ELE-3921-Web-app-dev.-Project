@@ -6,9 +6,8 @@
     <p>{{ event.eventdescription }}</p>
     <p>{{ event.eventdate }}</p>
     <p>Location: {{ event.location }}</p>
-    <p>Time: {{ event.time }}</p>
-    <p>Duration: {{ event.duration }}</p>
-    <p>Price: {{ event.price }}</p>
+    <p>Time: {{ event.eventtime }}</p>
+    <p>Price: {{ event.ticketprice }}</p>
     <form method="post" action="{% url 'buyticket' event.id %}">
         {% csrf_token %}
         <button type="submit">Buy Ticket</button>

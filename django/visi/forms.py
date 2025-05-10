@@ -79,4 +79,7 @@ class ChangeProfilePic(forms.ModelForm):
         model = User
         fields = ["profilepic"]
 
-
+class Photoreel(forms.ModelForm):
+    class Meta:
+        model = Photoreel
+        fields = ["image"] 

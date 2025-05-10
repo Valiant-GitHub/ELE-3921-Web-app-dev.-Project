@@ -1,5 +1,6 @@
 {%extends "base.html"%}
 {% block morecssprio%}
+
 <style>
 .mySlides {display:none}
 .w3-left, .w3-right, .w3-badge {cursor:pointer}
@@ -26,6 +27,7 @@
 
 
 </style>
+
 {%endblock%}
 
 {%block content%}
@@ -49,15 +51,21 @@
     {%endif%}
 
 <h1>Photos:</h1>
-    <div class="w3-content w3-display-container" style="max-width:800px">
-    {% for photo in photoreel %}
-        <img class="mySlides" src="{{ photo.url }}" style="width:100%; display:none;">
-    {% endfor %}
-    <div class="w3-center w3-container w3-section w3-large w3-text-white w3-display-bottommiddle" style="width:100%">
-        <div class="w3-left w3-hover-text-khaki" onclick="plusDivs(-1)">&#10094;</div>
-        <div class="w3-right w3-hover-text-khaki" onclick="plusDivs(1)">&#10095;</div>
-    
-    </div>
+<div class="w3-content w3-display-container" style="max-height:800px">
+    {% if photoreel %}
+        {% for photo in photoreel %}
+            <img class="mySlides" src="{{ photo.image.url }}" style="width:100%; display:none;">
+        {% endfor %}
+        <div class="w3-center w3-container w3-section w3-large w3-text-white w3-display-bottommiddle" style="width:100%">
+            <div class="w3-left w3-hover-text-khaki" onclick="plusDivs(-1)">&#10094;</div>
+            <div class="w3-right w3-hover-text-khaki" onclick="plusDivs(1)">&#10095;</div>
+            {% for photo in photoreel %}
+                <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv({{ forloop.counter }})"></span>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No photos available.</p>
+    {% endif %}
 </div>
 
   

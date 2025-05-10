@@ -146,9 +146,8 @@ def artistprofile(request, artist_id):
     events = Events.objects.filter(EventArtists=artist)
     return render(request, "artistprofile.html",{"artist":artist, "events":events})
 
-
 def venueprofile(request, venue_id):
     venue = get_object_or_404(Venue, id=venue_id)
     events = Events.objects.filter(eventvenue=venue)
-    photoreel = [venue.venuephotoreel]
-    return render(request, "venueprofile.html",{"venue":venue, "events":events, "photoreel":photoreel})
+    photoreel = venue.user.photoreel.all()  
+    return render(request, "venueprofile.html", {"venue": venue, "events": events, "photoreel": photoreel})

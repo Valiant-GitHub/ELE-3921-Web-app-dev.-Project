@@ -60,11 +60,17 @@ class Venue(models.Model):
     location = models.ForeignKey("Location", on_delete=models.CASCADE, related_name="venue_location")
     venuecapacity = models.IntegerField()
     venueimage = models.ImageField(upload_to="venuepics/", default="venuepics/default.png", null=True, blank=True)
-    venuephotoreel = models.ImageField(upload_to="venuepics/", default="venuepics/default.png", null=True, blank=True)
     venuefans = models.ManyToManyField(User, related_name="venue_fans", null=True, blank=True)
     genres = models.ManyToManyField(Genre, related_name="venues", null=True, blank=True)
     def __str__(self):
         return self.user.profilename
+    
+
+class Photoreel(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="photoreel")
+    image = models.ImageField(upload_to="reels/",  null=True, blank=True)
+    def __str__(self):
+        return self.image.url
 
 #location model for venues and events, helps adhere to relational database principles
 class Location(models.Model):

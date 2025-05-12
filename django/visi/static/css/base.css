@@ -1,12 +1,12 @@
 footer {
     text-align: center;
     padding: 3px;
-    background-color: lightgray;
+    background-color: rgb(19, 241, 241);
     color: black;
   }
 
 nav{
-    background-color: lightgray;
+    background:linear-gradient(to right,rgb(101, 232, 255), rgb(55, 131, 150));
     overflow: hidden;
 }
 
@@ -24,10 +24,62 @@ nav ul li a {
     display: block;
     color: white;
     text-align: center;
-    padding: 14px 16px;
+    padding: 30px 20px;
     text-decoration: none;
 }
 
 nav ul li a:hover {
-    background-color: #afafaf;
+    background-color: #28bbff;
+}
+
+body{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    background: linear-gradient(rgb(255, 255, 255), rgb(255, 255, 255));
+    margin: 0;
+}
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/*buttons*/
+button{
+    background:linear-gradient(to right,rgb(101, 232, 255), rgb(55, 131, 150));
+    color: white;
+    border: 1px black solid;
+    border-radius: 5px;
+    cursor: pointer;
+}
+button:hover{
+    background:linear-gradient(to right,rgb(44, 99, 109), rgb(21, 51, 58));
+}
+
+/*cards*/
+.card{
+    background-color: whitesmoke;
+    border: 1px rgb(118, 147, 245) solid;
+    box-shadow: 0 1px 5px;
+    padding: 5%;
+    font-size: medium;
+    border-radius: 10px;
+}
+.card a{
+    display: block;
+    height: 100%;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+    
+}
+
+/*forms*/
+form input{
+    width: 100%;
+}
+form textarea{
+    width: 100%;
+}
+form ul{
+    list-style-type:none;
 }

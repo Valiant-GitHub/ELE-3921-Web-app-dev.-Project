@@ -74,3 +74,14 @@ class AvailabilityForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+    
+
+class ChangeProfilePic(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ["profilepic"]
+
+class Photoreel(forms.ModelForm):
+    class Meta:
+        model = Photoreel
+        fields = ["image"] 

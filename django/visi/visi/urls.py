@@ -33,10 +33,14 @@ urlpatterns = [
     path("about/", views.about, name="about"),
     path("profile/", views.profile, name="profile"),
     path("profile/ticket/<int:ticketnumber>", views.ticketdetails, name="ticket"),
+    path('profile/edit/', views.editprofile, name="editprofile"),
     path("signup/", views.signup, name="signup"),
     path("createprofile/", views.createprofile, name="createprofile"),
     path("availability/", views.availability, name="availability"),
     path('login/', LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
+    path("artist/<int:artist_id>/", views.artistprofile, name="artistprofile"),
+    path("venue/<int:venue_id>/", views.venueprofile, name="venueprofile")
+
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

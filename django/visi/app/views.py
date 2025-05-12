@@ -125,3 +125,48 @@ def availability(request):
         form = AvailabilityForm(user=request.user)  # Pass the user
 
     return render(request, 'availability.html', {'form': form})
+
+@login_required
+def editprofile(request):
+    user = request.user
+    profilepic = ChangeProfilePic(instance=user)
+
+    if user.role == "fan":
+        form = FanProfileForm
+        profile = user.fan_user
+    elif user.role == "artist":
+        form = ArtistProfileForm
+        profile = user.artist_user
+    elif user.role == "venue":
+        form = VenueProfileForm
+        profile = user.venue_user
+    else:
+        return redirect("home")
+    rolespecific = form(instance=profile)
+    if request.method == "POST":
+        if "profilepic" in request.POST:
+            profilepic = ChangeProfilePic(request.POST, request.FILES, instance=user)
+            if profilepic.is_valid():
+                profilepic.save()
+                return redirect("profile")
+        elif "rolespecific" in request.POST:
+            rolespecific = form(request.POST, request.FILES, instance=profile)
+            if rolespecific.is_valid():
+                rolespecific.save()
+                return redirect("profile")
+
+    return render(request, "editprofile.html", {
+        "profilepic": profilepic,
+        "rolespecific": rolespecific,
+    })
+
+def artistprofile(request, artist_id):
+    artist = get_object_or_404(Artist, id=artist_id)
+    events = Events.objects.filter(EventArtists=artist)
+    return render(request, "artistprofile.html",{"artist":artist, "events":events})
+
+def venueprofile(request, venue_id):
+    venue = get_object_or_404(Venue, id=venue_id)
+    events = Events.objects.filter(eventvenue=venue)
+    photoreel = venue.user.photoreel.all()  
+    return render(request, "venueprofile.html", {"venue": venue, "events": events, "photoreel": photoreel})

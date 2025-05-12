@@ -92,10 +92,6 @@ class AvailabilityForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
-<<<<<<< HEAD
-=======
-    
->>>>>>> eaae3bb75a28b19cda02dc19e5275edbe8743f83
 
 class ChangeProfilePic(forms.ModelForm):
     class Meta:

@@ -1,0 +1,23 @@
+{%extends "base.html"%}
+
+{% block content %}
+    <div class="container">
+        <h1>Edit Profile</h1>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h2>Change Profile Picture</h2>
+            {{ profilepic.as_p }}
+            <button type="submit" name="profilepic">Save</button>
+        </form>
+
+        <hr>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h2>Edit Role-Specific Information</h2>
+            {{ rolespecific.as_p }}
+            <button type="submit" name="rolespecific">Save</button>
+        </form>
+    </div>
+{% endblock %}

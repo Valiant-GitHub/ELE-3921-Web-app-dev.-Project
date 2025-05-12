@@ -107,11 +107,20 @@ class Availability(models.Model):
         ]
 
     def clean(self):
-        # Ensure that either artist or venue is set, but not both
-        if not (self.artist or self.venue):
+        print(f"Debug: Cleaning availability. Artist: {self.artist}, Venue: {self.venue}")
+    
+        # Check if neither artist nor venue is set
+        if not self.artist and not self.venue:
             raise ValidationError("Either artist or venue must be set.")
+        
+        # Check if both artist and venue are set
         if self.artist and self.venue:
             raise ValidationError("Only one of artist or venue can be set.")
+        
+        # Ensure start_time is before end_time
+        if self.start_time and self.end_time and self.start_time >= self.end_time:
+            raise ValidationError("Start time must be before end time.")
+        
         super().clean()
 
     def __str__(self):

@@ -54,27 +54,44 @@ class DoormanProfileForm(forms.ModelForm):
 class AvailabilityForm(forms.ModelForm):
     class Meta:
         model = Availability
-        fields = ['start_time', 'end_time', 'description']  # No 'date' field
+        fields = ['start_time', 'end_time', 'description']  # Exclude artist and venue from the form
         widgets = {
-            'start_time': DateTimeInput(attrs={'type': 'datetime-local'}),  # Use datetime-local input
-            'end_time': DateTimeInput(attrs={'type': 'datetime-local'}),    # Use datetime-local input
+            'start_time': DateTimeInput(attrs={'type': 'datetime-local'}),
+            'end_time': DateTimeInput(attrs={'type': 'datetime-local'}),
         }
 
     def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user')  # Representing the user who is logged in and is creating the availability.
+        self.user = kwargs.pop('user')  # Get the logged-in user
         super().__init__(*args, **kwargs)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        # Set artist or venue based on the user's role
+        if self.user.role == 'artist':
+            self.instance.artist = self.user.artist_user
+            print(f"Debug: Set artist in form clean: {self.instance.artist}")
+        elif self.user.role == 'venue':
+            self.instance.venue = self.user.venue_user
+            print(f"Debug: Set venue in form clean: {self.instance.venue}")
+        else:
+            print("Debug: User role is not artist or venue.")
+        return cleaned_data
 
     def save(self, commit=True):
         instance = super().save(commit=False)
-        # Set the artist or venue based on the user's role
+        print(f"Debug: Saving availability for user: {self.user}, role: {self.user.role}")
+        # Automatically set artist or venue based on the user's role
         if self.user.role == 'artist':
             instance.artist = self.user.artist_user
+            print(f"Debug: Set artist: {instance.artist}")
         elif self.user.role == 'venue':
             instance.venue = self.user.venue_user
+            print(f"Debug: Set venue: {instance.venue}")
+        else:
+            print("Debug: User role is not artist or venue.")
         if commit:
             instance.save()
         return instance
-    
 
 class ChangeProfilePic(forms.ModelForm):
     class Meta:

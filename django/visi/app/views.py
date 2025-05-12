@@ -114,30 +114,33 @@ def save(self, commit=True):
         instance.save()
     return instance
 
+
+
 @login_required
 def availability(request):
     if request.method == 'POST':
-        form = AvailabilityForm(request.POST, user=request.user)  # Pass the user
+        form = AvailabilityForm(request.POST, user=request.user)
         if form.is_valid():
             form.save()
-            return render(request, 'success.html')  # Redirect or show success message
+            return render(request, 'availability_success.html')  # Use the new template
     else:
-        form = AvailabilityForm(user=request.user)  # Pass the user
+        form = AvailabilityForm(user=request.user)
 
     return render(request, 'availability.html', {'form': form})
+
 
 @login_required
 def editprofile(request):
     user = request.user
     profilepic = ChangeProfilePic(instance=user)
 
-    if user.role == "fan":
+    if user.role == "Fan":
         form = FanProfileForm
         profile = user.fan_user
-    elif user.role == "artist":
+    elif user.role == "Artist":
         form = ArtistProfileForm
         profile = user.artist_user
-    elif user.role == "venue":
+    elif user.role == "Venue":
         form = VenueProfileForm
         profile = user.venue_user
     else:

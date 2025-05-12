@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from app.models import *
 from django.forms import DateInput, TimeInput
+from django.forms import DateTimeInput
+
 
 
 class SignUpForm(UserCreationForm):
@@ -48,14 +50,14 @@ class DoormanProfileForm(forms.ModelForm):
 
 #form for artists and venues to post availability, it should include start time, end time, date, location, description. the form automatically gets the user from the session and sets it to the artist or venue field.
 
+
 class AvailabilityForm(forms.ModelForm):
     class Meta:
         model = Availability
-        fields = ['start_time', 'end_time', 'date', 'description']
+        fields = ['start_time', 'end_time', 'description']  # No 'date' field
         widgets = {
-            'start_time': TimeInput(attrs={'type': 'time'}),
-            'end_time': TimeInput(attrs={'type': 'time'}),
-            'date': DateInput(attrs={'type': 'date'}),
+            'start_time': DateTimeInput(attrs={'type': 'datetime-local'}),  # Use datetime-local input
+            'end_time': DateTimeInput(attrs={'type': 'datetime-local'}),    # Use datetime-local input
         }
 
     def __init__(self, *args, **kwargs):

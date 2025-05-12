@@ -5,7 +5,8 @@ from .models import *
 from forms import *
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-    
+
+
 
 # Create your views here.
 def home(request):
@@ -95,14 +96,32 @@ def createprofile(request):
 
     return render(request, 'profilecreation.html', {'form': form})
 
+
+def save(self, commit=True):
+    instance = super().save(commit=False)
+    # Debugging: Print the user and their role
+    print(f"Saving availability for user: {self.user}, role: {self.user.role}")
+    
+    # Set the artist or venue based on the user's role
+    if self.user.role == 'artist':
+        instance.artist = self.user.artist_user
+    elif self.user.role == 'venue':
+        instance.venue = self.user.venue_user
+    else:
+        print("User role is not artist or venue.")
+    
+    if commit:
+        instance.save()
+    return instance
+
 @login_required
 def availability(request):
     if request.method == 'POST':
-        form = AvailabilityForm(request.POST, user=request.user)  # Pass the user here
+        form = AvailabilityForm(request.POST, user=request.user)  # Pass the user
         if form.is_valid():
             form.save()
-            # Redirect or render a success message
+            return render(request, 'success.html')  # Redirect or show success message
     else:
-        form = AvailabilityForm(user=request.user)  # Pass the user here
+        form = AvailabilityForm(user=request.user)  # Pass the user
 
     return render(request, 'availability.html', {'form': form})

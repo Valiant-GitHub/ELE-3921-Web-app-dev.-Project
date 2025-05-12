@@ -86,11 +86,10 @@ class Availability(models.Model):
     venue = models.ForeignKey(Venue, on_delete=models.CASCADE, null=True, blank=True, related_name="availability_venue")
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
-    date = models.DateField()
     description = models.TextField()
 
     class Meta:
-        ordering = ['date', 'start_time']  # Default sorting by date and start time
+        ordering = ['start_time']  # Default sorting by date and start time
         constraints = [
             models.CheckConstraint(
                 check=(

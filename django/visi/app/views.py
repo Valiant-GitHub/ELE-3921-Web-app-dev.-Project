@@ -128,12 +128,16 @@ def availability(request):
 
     return render(request, 'availability.html', {'form': form})
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> eaae3bb75a28b19cda02dc19e5275edbe8743f83
 @login_required
 def editprofile(request):
     user = request.user
     profilepic = ChangeProfilePic(instance=user)
 
+<<<<<<< HEAD
     if user.role == "Fan":
         form = FanProfileForm
         profile = user.fan_user
@@ -141,6 +145,15 @@ def editprofile(request):
         form = ArtistProfileForm
         profile = user.artist_user
     elif user.role == "Venue":
+=======
+    if user.role == "fan":
+        form = FanProfileForm
+        profile = user.fan_user
+    elif user.role == "artist":
+        form = ArtistProfileForm
+        profile = user.artist_user
+    elif user.role == "venue":
+>>>>>>> eaae3bb75a28b19cda02dc19e5275edbe8743f83
         form = VenueProfileForm
         profile = user.venue_user
     else:

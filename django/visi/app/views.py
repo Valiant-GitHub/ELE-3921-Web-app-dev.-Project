@@ -122,11 +122,11 @@ def availability(request):
         form = AvailabilityForm(request.POST, user=request.user)
         if form.is_valid():
             form.save()
-            return render(request, 'availability_success.html')  # Use the new template
+            return redirect('availabilitysuccess')  # Redirect to a success page
     else:
         form = AvailabilityForm(user=request.user)
 
-    return render(request, 'availability.html', {'form': form})
+    return render(request, 'availabilityform.html', {'form': form})
 
 @login_required
 def editprofile(request):
@@ -161,6 +161,11 @@ def editprofile(request):
         "profilepic": profilepic,
         "rolespecific": rolespecific,
     })
+
+
+@login_required
+def availability_success(request):
+    return render(request, 'availabilitysuccess.html')
 
 def artistprofile(request, artist_id):
     artist = get_object_or_404(Artist, id=artist_id)

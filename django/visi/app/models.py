@@ -80,9 +80,8 @@ class Location(models.Model):
     zipcode = models.CharField(max_length=10)
     def __str__(self):
         return f"{self.address}, {self.city}, {self.country}, {self.zipcode}"
-    
+ 
 class Availability(models.Model):
-    # Define TYPE_CHOICES above the type field
     TYPE_CHOICES = [
         ('artist', 'Artist'),
         ('venue', 'Venue'),
@@ -95,40 +94,16 @@ class Availability(models.Model):
     description = models.TextField()
 
     class Meta:
-        ordering = ['start_time']  # Default sorting by date and start time
         constraints = [
             models.CheckConstraint(
                 check=(
                     models.Q(artist__isnull=False, venue__isnull=True) |
                     models.Q(artist__isnull=True, venue__isnull=False)
                 ),
-                name="artist_or_venue_only"  # Ensures only one of artist or venue is set
+                name="artist_or_venue_only"
             )
         ]
-
-    def clean(self):
-        print(f"Debug: Cleaning availability. Artist: {self.artist}, Venue: {self.venue}")
-    
-        # Check if neither artist nor venue is set
-        if not self.artist and not self.venue:
-            raise ValidationError("Either artist or venue must be set.")
-        
-        # Check if both artist and venue are set
-        if self.artist and self.venue:
-            raise ValidationError("Only one of artist or venue can be set.")
-        
-        # Ensure start_time is before end_time
-        if self.start_time and self.end_time and self.start_time >= self.end_time:
-            raise ValidationError("Start time must be before end time.")
-        
-        super().clean()
-
-    def __str__(self):
-        if self.type == 'artist' and self.artist:
-            return f"{self.artist.user.profilename} available from {self.start_time} to {self.end_time}"
-        elif self.type == 'venue' and self.venue:
-            return f"{self.venue.user.profilename} available from {self.start_time} to {self.end_time}"
-        return "Availability record"
+       
 
 class Events(models.Model):
     eventname = models.CharField(max_length=100)

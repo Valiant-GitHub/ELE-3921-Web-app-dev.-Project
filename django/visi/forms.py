@@ -90,3 +90,8 @@ class Photoreel(forms.ModelForm):
     class Meta:
         model = Photoreel
         fields = ["image"] 
+
+class BookingForm(forms.ModelForm):
+    class Meta:
+        model = Booking
+        fields = ['message']

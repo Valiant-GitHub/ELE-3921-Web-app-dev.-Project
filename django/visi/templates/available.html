@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Available Slots</h2>
+
+{% if availabilities %}
+    <table class="availability-table">
+        <thead>
+            <tr>
+                <th>Artist/Venue</th>
+                <th>Description</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for availability in availabilities %}
+                <tr>
+                    <td>
+                        {% if availability.artist %}
+                            {{ availability.artist.name }}
+                        {% elif availability.venue %}
+                            {{ availability.venue.name }}
+                        {% else %}
+                            Unknown
+                        {% endif %}
+                    </td>
+                    <td title="{{ availability.description }}">
+                        {{ availability.description|slice:":100" }}...
+                        <a href="{% url 'listingdetail' 'availability' availability.id %}" target="_blank">Read more</a>
+                    </td>
+                    <td>{{ availability.start_time }}</td>
+                    <td>{{ availability.end_time }}</td>
+                    <td>
+                        <a href="{% url 'requestbooking' availability.id %}">Request Booking</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No available slots at the moment.</p>
+{% endif %}
+{% endblock %}

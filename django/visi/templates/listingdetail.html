@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>{{ listing_type|capfirst }} Details</h2>
+
+{% if listing_type == 'availability' %}
+    <p><strong>Description:</strong> {{ listing.description }}</p>
+    <p><strong>Start Time:</strong> {{ listing.start_time }}</p>
+    <p><strong>End Time:</strong> {{ listing.end_time }}</p>
+    <p><strong>Artist/Venue:</strong>
+        {% if listing.artist %}
+            {{ listing.artist.user.profilename }}
+        {% elif listing.venue %}
+            {{ listing.venue.user.profilename }}
+        {% else %}
+            Unknown
+        {% endif %}
+    </p>
+{% elif listing_type == 'booking' %}
+    <p><strong>Message:</strong> {{ listing.message }}</p>
+    <p><strong>Status:</strong> {{ listing.get_status_display }}</p>
+    <p><strong>Availability:</strong> {{ listing.availability.description }}</p>
+    <p><strong>Start Time:</strong> {{ listing.availability.start_time }}</p>
+    <p><strong>End Time:</strong> {{ listing.availability.end_time }}</p>
+{% endif %}
+
+<!--
+"Delete Listing" button section.
+Only shows if the current user is the artist or venue owner of the listing
+(for both availability and booking types), ensuring only authorized users can delete the listing.
+-->
+{% if listing_type == 'availability' and listing.artist and listing.artist.user == user %}
+    <form method="post" style="margin-top: 20px;">
+        {% csrf_token %}
+        <button type="submit" name="delete" class="btn btn-danger">Delete Listing</button>
+    </form>
+{% elif listing_type == 'availability' and listing.venue and listing.venue.user == user %}
+    <form method="post" style="margin-top: 20px;">
+        {% csrf_token %}
+        <button type="submit" name="delete" class="btn btn-danger">Delete Listing</button>
+    </form>
+{% elif listing_type == 'booking' and listing.availability.artist and listing.availability.artist.user == user %}
+    <form method="post" style="margin-top: 20px;">
+        {% csrf_token %}
+        <button type="submit" name="delete" class="btn btn-danger">Delete Listing</button>
+    </form>
+{% elif listing_type == 'booking' and listing.availability.venue and listing.availability.venue.user == user %}
+    <form method="post" style="margin-top: 20px;">
+        {% csrf_token %}
+        <button type="submit" name="delete" class="btn btn-danger">Delete Listing</button>
+    </form>
+{% endif %}
+
+<a href="javascript:history.back()">Go Back</a>
+{% endblock %}

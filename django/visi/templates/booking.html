@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Request Booking</h2>
+    <p>
+        {% if availability.type == 'artist' %}
+            Artist: {{ availability.artist.user.profilename }}
+        {% elif availability.type == 'venue' %}
+            Venue: {{ availability.venue.user.profilename }}
+        {% endif %}
+        <br>
+        From: {{ availability.start_time }} to {{ availability.end_time }}
+        <br>
+        Description: {{ availability.description }}
+    </p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit Request</button>
+    </form>
+{% endblock %}

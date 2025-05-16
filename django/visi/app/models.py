@@ -135,7 +135,22 @@ class Tickets(models.Model):
     is_used = models.BooleanField(default=False)
     def __str__(self):
         return f"Ticket {self.ticketnumber} for {self.fan.user.profilename} to {self.event.eventname}"
-    
+
+class Booking(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="booking")
+    availability = models.ForeignKey(Availability, on_delete=models.CASCADE, related_name="booking")
+    message = models.TextField(blank=True, null=True)
+    status = models.CharField(
+        max_length=10,
+        choices=[('pending', 'Pending'), ('approved', 'Approved'), ('rejected', 'Rejected')],
+        default='pending'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Booking by {self.user.username} for {self.availability}"
+
+
 #class Reviews(models.Model):
 #class Merchandise
 #class Orders

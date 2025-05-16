@@ -41,7 +41,15 @@ urlpatterns = [
     path('login/', LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path("artist/<int:artist_id>/", views.artistprofile, name="artistprofile"),
-    path("venue/<int:venue_id>/", views.venueprofile, name="venueprofile")
+    path("venue/<int:venue_id>/", views.venueprofile, name="venueprofile"),
+    path('availability/<int:availability_id>/request/', views.requestbooking, name='requestbooking'),
+    path('available/', views.available, name='available'),
+    path('availability/<int:availability_id>/request/', views.requestbooking, name='requestbooking'),
+    path('bookingsuccess/', views.bookingsuccess, name='bookingsuccess'),
+    path('dashboard/', views.dashboard, name='dashboard'),  # Add this line
+    path('listing/<str:listing_type>/<int:listing_id>/', views.listingdetail, name='listingdetail'),
+    path('bookingaction/', views.handlebookingaction, name='bookingaction'),
+    path('myevents/', views.myevents, name='myevents'),
 
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

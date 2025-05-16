@@ -83,3 +83,39 @@ form textarea{
 form ul{
     list-style-type:none;
 }
+
+/* General table cell styles */
+table td {
+    max-width: 200px; /* Limit the width of table cells */
+    overflow-wrap: break-word; /* Break long words */
+    word-wrap: break-word; /* Break long words */
+    word-break: break-all; /* Force break for long unbroken words */
+    white-space: normal; /* Allow text to wrap */
+    overflow: hidden; /* Hide overflowing text */
+    text-overflow: ellipsis; /* Add "..." for truncated text */
+}
+
+/* Specific styles for availability and booking tables */
+.availability-table td,
+.booking-table td {
+    max-width: 250px; /* Adjust as needed */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-all; /* Force break for long unbroken words */
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}

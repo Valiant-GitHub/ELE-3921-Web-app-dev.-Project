@@ -23,7 +23,12 @@
                 <a href="{% url 'signup' %}">Sign up</a> <a href="{% url 'login' %}">login</a>
             {% endif %}
         </li>
-        <li><a href="{% url 'availabilityform' %}">Availability Form</a></li> 
+        {% if user.is_authenticated and user.role == 'artist' or user.role == 'venue' %}
+            <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li><a href="{% url 'availabilityform' %}">Availability Form</a></li>
+            <li><a href="{% url 'available' %}">Available for events</a></li>
+            <li><a href="{% url 'myevents' %}">My events</a></li>
+        {% endif %}
     </ul>
 </nav>
     {% block content %}

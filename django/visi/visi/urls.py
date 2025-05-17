@@ -50,6 +50,7 @@ urlpatterns = [
     path('listing/<str:listing_type>/<int:listing_id>/', views.listingdetail, name='listingdetail'),
     path('bookingaction/', views.handlebookingaction, name='bookingaction'),
     path('myevents/', views.myevents, name='myevents'),
-
+    path('createevent/', views.createevent, name='createevent'),
+    path('bookingaction/', views.handlebookingaction, name='bookingaction'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

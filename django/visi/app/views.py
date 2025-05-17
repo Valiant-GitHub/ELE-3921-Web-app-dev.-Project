@@ -6,6 +6,7 @@ from forms import *
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from .utils import role_required
+from django.contrib import messages
 
 
 # Create your views here.
@@ -191,6 +192,20 @@ def available(request):
 @role_required(['artist', 'venue'])
 def requestbooking(request, availability_id):
     availability = get_object_or_404(Availability, id=availability_id)
+
+    # Check if the user is trying to book their own availability
+    is_owner = False
+        
+    if availability.artist and availability.artist.user == request.user:
+        is_owner = True
+            
+    if availability.venue and availability.venue.user == request.user:
+        is_owner = True
+            
+    if is_owner:
+        messages.error(request, "You cannot book your own availability.")
+        return redirect('available')
+
     if request.method == 'POST':
         form = BookingForm(request.POST)
         if form.is_valid():
@@ -297,37 +312,17 @@ def handlebookingaction(request):
         booking_id = request.POST.get('booking_id')
         action = request.POST.get('action')
         booking = Booking.objects.get(id=booking_id)
-        availability = booking.availability
-
+        
         if action == 'approve':
-            # Create Event
-            event = Events.objects.create(
-                eventname=availability.description,
-                eventdate=availability.start_time.date(),
-                eventtime=availability.start_time.time(),
-                location=availability.venue.location if availability.venue else None,
-                eventdescription=availability.description,
-                eventvenue=availability.venue if availability.venue else None,
-                # Add other fields as needed - you might need to set a default value for ticketprice
-                ticketprice=0.00  # Set an appropriate default value
-            )
-            # Optionally add artists to event
-            if availability.artist:
-                event.EventArtists.add(availability.artist)
-            
-            # Delete booking and availability
-            booking.delete()
-            availability.delete()
-            
-            # Redirect to the event detail page
-            return redirect('event', event_id=event.id)
+            # Store booking ID in session and redirect to event creation form
+            request.session['approved_booking_id'] = booking_id
+            return redirect('createevent')
         elif action == 'reject':
             booking.delete()
             return redirect('dashboard')
         
-        # Default fallback redirect
-        return redirect('dashboard')
-    
+    return redirect('dashboard')
+ 
 @login_required
 @role_required(['artist', 'venue'])
 def myevents(request):
@@ -346,3 +341,86 @@ def myevents(request):
     events = list(set(events))
     
     return render(request, 'myevents.html', {'events': events})
+
+@login_required
+@role_required(['artist', 'venue'])
+def createevent(request):
+    # Get the approved booking from session
+    booking_id = request.session.get('approved_booking_id')
+    if not booking_id:
+        return redirect('dashboard')
+    
+    try:
+        booking = Booking.objects.get(id=booking_id)
+        availability = booking.availability
+    except Booking.DoesNotExist:
+        return redirect('dashboard')
+    
+    # Create a better event name combining artist and venue
+    event_name = availability.description
+    
+    # Determine if the booking requester is different from the availability owner
+    requesting_artist = None
+    requesting_venue = None
+    
+    # If availability belongs to venue, requester might be artist
+    if availability.venue and booking.user.role == 'artist' and hasattr(booking.user, 'artist_user'):
+        requesting_artist = booking.user.artist_user
+    
+    # If availability belongs to artist, requester might be venue
+    if availability.artist and booking.user.role == 'venue' and hasattr(booking.user, 'venue_user'):
+        requesting_venue = booking.user.venue_user
+
+    # Create artist+venue combo name
+    actual_artist = requesting_artist or availability.artist
+    actual_venue = requesting_venue or availability.venue
+    
+    if actual_artist and actual_venue:
+        artist_name = actual_artist.user.profilename if hasattr(actual_artist.user, 'profilename') else actual_artist.user.username
+        venue_name = actual_venue.user.profilename if hasattr(actual_venue.user, 'profilename') else actual_venue.user.username
+        event_name = f"{artist_name} at {venue_name}"
+    elif actual_artist:
+        artist_name = actual_artist.user.profilename if hasattr(actual_artist.user, 'profilename') else actual_artist.user.username
+        event_name = f"{artist_name} performance"
+    elif actual_venue:
+        venue_name = actual_venue.user.profilename if hasattr(actual_venue.user, 'profilename') else actual_venue.user.username
+        event_name = f"Event at {venue_name}"
+    
+    if request.method == 'POST':
+        form = EventForm(request.POST, request.FILES)
+        if form.is_valid():
+            event = form.save()
+            # Add artist if exists (either from availability or requester)
+            if actual_artist:
+                event.EventArtists.add(actual_artist)
+            # Delete booking and availability
+            booking.delete()
+            availability.delete()
+            # Clear session
+            del request.session['approved_booking_id']
+            return redirect('event', event_id=event.id)
+    else:
+        # Prefill form with data from availability
+        initial_data = {
+            'eventname': event_name,
+            'eventdate': availability.start_time.date(),
+            'eventtime': availability.start_time.time(),
+            'eventdescription': availability.description,
+            'ticketprice': 0.00,  # Default value
+        }
+        
+        # Auto-select the correct venue
+        if actual_venue:
+            initial_data['eventvenue'] = actual_venue.id
+            
+            # Auto-select the venue's location if it exists
+            if hasattr(actual_venue, 'location') and actual_venue.location:
+                initial_data['location'] = actual_venue.location.id
+                
+        form = EventForm(initial=initial_data)
+    
+    return render(request, 'createevent.html', {
+        'form': form,
+        'booking': booking,
+        'availability': availability
+    })

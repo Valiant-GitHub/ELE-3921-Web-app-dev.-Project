@@ -119,3 +119,83 @@ table td {
 .btn-danger:hover {
     background-color: #c82333;
 }
+
+/* Add this to your CSS file */
+.booking-info {
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.booking-info .form-group {
+  margin-bottom: 1rem;
+}
+
+.booking-info textarea {
+  width: 100%;
+}
+
+.form-field-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-field-row .form-group {
+  flex: 1;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.form-actions {
+  margin-top: 2rem;
+}
+
+.error {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+
+/* Make form inputs and Bootstrap form controls consistent */
+.form-control {
+  width: 100% !important;
+  padding: 0.5rem !important;
+  border-radius: 0.25rem !important;
+}
+
+/* Fix textarea rendering in booking info */
+.booking-info .row .form-group textarea {
+  width: 100% !important;
+  min-height: 80px !important;
+}
+
+/* Bootstrap form-row fix */
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
+}
+
+/* Ensure bootstrap column spacing */
+.form-row > .col,
+.form-row > [class*="col-"] {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+/* Fix ml-2 with Bootstrap 5 compatibility */
+.ml-2 {
+  margin-left: 0.5rem !important;
+}
+
+/* Ensure proper positioning in form groups */
+.form-group {
+  margin-bottom: 1rem;
+  position: relative;
+  width: 100%;
+}

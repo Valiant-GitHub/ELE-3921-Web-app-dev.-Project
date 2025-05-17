@@ -11,6 +11,7 @@
                 <th>Description</th>
                 <th>Start Time</th>
                 <th>End Time</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -19,15 +20,25 @@
                     <td title="{{ availability.description }}">
                         {{ availability.description|slice:":100" }}...
                         <a href="{% url 'listingdetail' 'availability' availability.id %}" target="_blank">Read more</a>
+
+                        
                     </td>
                     <td>{{ availability.start_time }}</td>
                     <td>{{ availability.end_time }}</td>
+                    <td>
+                        <form method="POST" action="{% url 'listingdetail' 'availability' availability.id %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="delete" value="true">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this listing?')">Delete Listing</button>
+                        </form>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
 {% else %}
     <p>You have not added any availability slots yet.</p>
+    <a href="{% url 'availabilityform' %}" class="btn btn-primary">Are you available?</a>
 {% endif %}
 
 <h3>Pending Booking Requests</h3>

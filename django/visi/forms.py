@@ -95,3 +95,14 @@ class BookingForm(forms.ModelForm):
     class Meta:
         model = Booking
         fields = ['message']
+
+class EventForm(forms.ModelForm):
+    class Meta:
+        model = Events
+        fields = ['eventname', 'eventdate', 'eventtime', 'location', 
+                  'eventdescription', 'eventimage', 'eventvenue', 
+                  'ticketprice', 'genres']
+        widgets = {
+            'eventdate': forms.DateInput(attrs={'type': 'date'}),
+            'eventtime': forms.TimeInput(attrs={'type': 'time'}),
+        }

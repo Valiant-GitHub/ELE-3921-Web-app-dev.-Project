@@ -19,21 +19,28 @@
                 <tr>
                     <td>
                         {% if availability.artist %}
-                            {{ availability.artist.name }}
+                            {{ availability.artist.user.profilename|default:availability.artist.user.username }}
                         {% elif availability.venue %}
-                            {{ availability.venue.name }}
+                            {{ availability.venue.user.profilename|default:availability.venue.user.username }}
                         {% else %}
                             Unknown
-                        {% endif %}
-                    </td>
+                        {% endif %}                    </td>
                     <td title="{{ availability.description }}">
                         {{ availability.description|slice:":100" }}...
-                        <a href="{% url 'listingdetail' 'availability' availability.id %}" target="_blank">Read more</a>
+                        <a href="{% url 'listingdetail' 'availability' availability.id %}" class="btn btn-outline-secondary btn-sm" target="_blank">Read more</a>
                     </td>
                     <td>{{ availability.start_time }}</td>
                     <td>{{ availability.end_time }}</td>
                     <td>
-                        <a href="{% url 'requestbooking' availability.id %}">Request Booking</a>
+                        {% if availability.artist and availability.artist.user == request.user or availability.venue and availability.venue.user == request.user %}
+                            <form method="POST" action="{% url 'listingdetail' 'availability' availability.id %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="delete" value="true">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this listing?')">Delete Listing</button>
+                            </form>
+                        {% else %}
+                            <a href="{% url 'requestbooking' availability.id %}" class="btn btn-primary btn-sm">Request Booking</a>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}
@@ -42,4 +49,4 @@
 {% else %}
     <p>No available slots at the moment.</p>
 {% endif %}
-{% endblock %}
+{% endblock %}1

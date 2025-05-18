@@ -160,20 +160,32 @@ table td {
 }
 
 
-/* Make form inputs and Bootstrap form controls consistent */
+
+/* 
+  Consistent form control styling for custom and Bootstrap forms 
+  - Ensures all .form-control elements have uniform width, padding, and border radius
+*/
 .form-control {
   width: 100% !important;
   padding: 0.5rem !important;
   border-radius: 0.25rem !important;
+  box-sizing: border-box;
 }
 
-/* Fix textarea rendering in booking info */
+/* 
+  Booking info textarea fix 
+  - Ensures textareas inside .booking-info forms expand to full width and have a minimum height
+*/
 .booking-info .row .form-group textarea {
   width: 100% !important;
   min-height: 80px !important;
+  resize: vertical;
 }
 
-/* Bootstrap form-row fix */
+/* 
+  Bootstrap form row layout 
+  - Uses flexbox for horizontal alignment and negative margins for gutter compensation
+*/
 .form-row {
   display: flex;
   flex-wrap: wrap;
@@ -181,19 +193,28 @@ table td {
   margin-left: -15px;
 }
 
-/* Ensure bootstrap column spacing */
+/* 
+  Bootstrap column gutter fix 
+  - Adds horizontal padding to columns inside .form-row for consistent spacing
+*/
 .form-row > .col,
 .form-row > [class*="col-"] {
   padding-right: 15px;
   padding-left: 15px;
 }
 
-/* Fix ml-2 with Bootstrap 5 compatibility */
+/* 
+  Margin utility for left spacing (Bootstrap 4/5 compatibility) 
+  - Adds left margin to elements with .ml-2
+*/
 .ml-2 {
   margin-left: 0.5rem !important;
 }
 
-/* Ensure proper positioning in form groups */
+/* 
+  Form group layout improvements 
+  - Ensures .form-group elements have consistent spacing and proper positioning
+*/
 .form-group {
   margin-bottom: 1rem;
   position: relative;

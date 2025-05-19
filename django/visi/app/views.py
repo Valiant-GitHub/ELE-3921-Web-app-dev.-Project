@@ -1,5 +1,5 @@
 import random
-from django.http import HttpResponse
+from django.http import HttpResponseForbidden,HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from forms import *
@@ -136,13 +136,13 @@ def editprofile(request):
     user = request.user
     profilepic = ChangeProfilePic(instance=user)
 
-    if user.role == "Fan":
+    if user.role == "fan":
         form = FanProfileForm
         profile = user.fan_user
-    elif user.role == "Artist":
+    elif user.role == "artist":
         form = ArtistProfileForm
         profile = user.artist_user
-    elif user.role == "Venue":
+    elif user.role == "venue":
         form = VenueProfileForm
         profile = user.venue_user
     else:

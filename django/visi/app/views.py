@@ -237,11 +237,15 @@ def bookingsuccess(request):
 @login_required
 @role_required(['artist', 'venue'])
 def dashboard(request):
-    # Get the logged-in user's availability slots
+    # Get the logged-in user's availability slots and events
     if request.user.role == 'artist':
         availabilities = Availability.objects.filter(artist__user=request.user)
+        events = Events.objects.filter(EventArtists=request.user.artist_user)
+
     elif request.user.role == 'venue':
         availabilities = Availability.objects.filter(venue__user=request.user)
+        events = Events.objects.filter(eventvenue=request.user.venue_user)
+
     else:
         availabilities = Availability.objects.none()
 
@@ -262,6 +266,14 @@ def dashboard(request):
             'end': booking.availability.end_time.isoformat(),
             'color': color,
         })
+        
+    for event in events:
+        calendar_events.append({
+            'title': event.eventname,
+            'start': event.eventdate.isoformat(),
+            'color': 'blue',  
+        })
+
 
     if request.method == 'POST':
         booking_id = request.POST.get('booking_id')

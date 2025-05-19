@@ -39,7 +39,7 @@
         <div class="favartists">
             <h1>Your favorite artists:</h1>
             {% for artist in user.fan_user.favartists.all %}
-                <p>{{ artist.profilename }}</p>
+            <p><a href="{% url 'artistprofile' artist.artist_user.id %}">{{ artist.profilename }}</a></p>
             {% endfor %}
         </div>
         <div class="favgenres">

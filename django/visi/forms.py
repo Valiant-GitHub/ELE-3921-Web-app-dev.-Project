@@ -32,6 +32,10 @@ class FanProfileForm(forms.ModelForm):
     class Meta:
         model = Fan
         fields = ['favartists', 'genres']
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['favartists'].queryset = User.objects.filter(artist_user__isnull=False)
+        self.fields['favartists'].label_from_instance = lambda obj: obj.profilename
 
 class ArtistProfileForm(forms.ModelForm):
     class Meta:
@@ -39,9 +43,27 @@ class ArtistProfileForm(forms.ModelForm):
         fields = ['artistimage', 'genres']
 
 class VenueProfileForm(forms.ModelForm):
+    address=forms.CharField(max_length=100, required=True, label="Address")
+    zip=forms.CharField(max_length=6, required=True, label="Zip Code")
+    city=forms.CharField(max_length=20, required=True, label="City")
+    country= forms.CharField(max_length=20, required=True, label="Country")
     class Meta:
         model = Venue
-        fields = ['venuecapacity', 'location', 'venueimage', 'genres']
+        fields = ["address", "zip", "city", "country","venuecapacity", "venueimage", "genres"]
+    def save(self, commit=True):
+        venue = super().save(commit=False)
+        location, created = Location.objects.get_or_create(
+            address=self.cleaned_data["address"],
+            zipcode=self.cleaned_data["zip"],
+            city=self.cleaned_data["city"],
+            country=self.cleaned_data["country"],
+        )
+        venue.location = location
+        if commit:
+            venue.save()
+            self.save_m2m()
+        return venue
+
 
 class DoormanProfileForm(forms.ModelForm):
     class Meta:

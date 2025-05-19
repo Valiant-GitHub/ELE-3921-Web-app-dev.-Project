@@ -7,9 +7,25 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from .utils import role_required
 from django.contrib import messages
-
+from functools import wraps
 
 # Create your views here.
+
+#made this to not allow users to create events, availabilities, etc. if they dont have a profile
+def profile_required(view_func):
+    @wraps(view_func)
+    def checkprofile(request, *args, **kwargs):
+        user = request.user
+        if not (
+            hasattr(user, "fan_user") or
+            hasattr(user, "artist_user") or
+            hasattr(user, "venue_user") or
+            hasattr(user, "doorman_user")
+        ):
+            return redirect("createprofile")
+        return view_func(request, *args, **kwargs)
+    return checkprofile
+
 def home(request):
     return render(request, "home.html")
 
@@ -48,7 +64,7 @@ def buyticket(request, event_id):
 
 def about(request):
     return render(request, "about.html")
-
+@profile_required
 @login_required 
 def profile(request):
     return render(request, "profile.html")
@@ -75,6 +91,9 @@ def ticketdetails(request, ticketnumber):
 @login_required
 def createprofile(request):
     user = request.user
+#added a check to if the user already has a profile
+    if hasattr(user, "fan_user") or hasattr(user, "artist_user") or hasattr(user, "venue_user") or hasattr(user, "doorman_user"):
+        return redirect("profile")
     if user.role == "fan":
         form_class = FanProfileForm
     elif user.role == "artist":
@@ -117,7 +136,7 @@ def save(self, commit=True):
     return instance
 
 
-
+@profile_required
 @login_required
 @role_required(['artist', 'venue'])
 def availability(request):
@@ -131,6 +150,8 @@ def availability(request):
 
     return render(request, 'availabilityform.html', {'form': form})
 
+
+@profile_required
 @login_required
 def editprofile(request):
     user = request.user
@@ -166,6 +187,7 @@ def editprofile(request):
     })
 
 
+@profile_required
 @login_required
 @role_required(['artist', 'venue'])
 def availability_success(request):
@@ -182,12 +204,14 @@ def venueprofile(request, venue_id):
     photoreel = venue.user.photoreel.all()  
     return render(request, "venueprofile.html", {"venue": venue, "events": events, "photoreel": photoreel})
 
+@profile_required
 @login_required
 @role_required(['artist', 'venue'])
 def available(request):
     availabilities = Availability.objects.all().order_by('start_time')
     return render(request, 'available.html', {'availabilities': availabilities})
 
+@profile_required
 @login_required
 @role_required(['artist', 'venue'])
 def requestbooking(request, availability_id):
@@ -218,11 +242,13 @@ def requestbooking(request, availability_id):
         form = BookingForm()
     return render(request, 'booking.html', {'form': form, 'availability': availability})
 
+@profile_required
 @login_required
 @role_required(['artist', 'venue'])
 def bookingsuccess(request):
     return render(request, 'bookingsuccess.html')
 
+@profile_required
 @login_required
 @role_required(['artist', 'venue'])
 def dashboard(request):
@@ -272,6 +298,7 @@ def dashboard(request):
     })
 
 
+@profile_required
 @login_required
 @role_required(['artist', 'venue'])
 def listingdetail(request, listing_id, listing_type):
@@ -323,6 +350,7 @@ def handlebookingaction(request):
         
     return redirect('dashboard')
  
+@profile_required
 @login_required
 @role_required(['artist', 'venue'])
 def myevents(request):
@@ -342,6 +370,7 @@ def myevents(request):
     
     return render(request, 'myevents.html', {'events': events})
 
+@profile_required
 @login_required
 @role_required(['artist', 'venue'])
 def createevent(request):

@@ -8,6 +8,10 @@
     <p>Location: {{ event.location }}</p>
     <p>Time: {{ event.eventtime }}</p>
     <p>Price: {{ event.ticketprice }}</p>
+    {% for artist in event.EventArtists.all %}
+        <p>Artist: <a href="{% url 'artistprofile' artist.id %}">{{ artist.user.profilename }}</a></p>
+    {% endfor %}
+    <p>Venue: <a href="{% url 'venueprofile' event.eventvenue.id %}">{{ event.eventvenue }}</a></p>
     <form method="post" action="{% url 'buyticket' event.id %}">
         {% csrf_token %}
         <button type="submit">Buy Ticket</button>

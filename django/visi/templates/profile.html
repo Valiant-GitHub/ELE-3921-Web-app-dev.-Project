@@ -58,15 +58,27 @@
         
         </div>
     {% elif user.role == "artist"%}
-        
+        <a href="{% url 'artistprofile' user.artist_user.id %}">Show public profile</a>
         <div class="artistinfo">
             <h1>Your artist information:</h1>
-            
+
             <h1>Your genres:</h1>
             <p>{% for genre in user.artist_user.genres.all %} {{ genre.genrename }}{% endfor %}</p>
                 
         </div>
+
+    {% elif user.role == "venue"%}
+        <a href="{% url 'venueprofile' user.venue_user.id %}">Show public profile</a>
+
+        <div class="venueinfo">
+            <h1>Your venue information:</h1>
+            <h1>Your genres:</h1>
+            <p>{% for genre in user.venue_user.genres.all %} {{ genre.genrename }}{% endfor %}</p>
+                
+        </div>
+
     {% endif %}
+
     <form method="post" action="{% url 'logout' %}">
         {% csrf_token %}
         <button type="submit">Logout</button>

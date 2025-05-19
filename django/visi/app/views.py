@@ -5,26 +5,11 @@ from .models import *
 from forms import *
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from .utils import role_required
+from .utils import role_required, profile_required
 from django.contrib import messages
-from functools import wraps
 
 # Create your views here.
 
-#made this to not allow users to create events, availabilities, etc. if they dont have a profile
-def profile_required(view_func):
-    @wraps(view_func)
-    def checkprofile(request, *args, **kwargs):
-        user = request.user
-        if not (
-            hasattr(user, "fan_user") or
-            hasattr(user, "artist_user") or
-            hasattr(user, "venue_user") or
-            hasattr(user, "doorman_user")
-        ):
-            return redirect("createprofile")
-        return view_func(request, *args, **kwargs)
-    return checkprofile
 
 def home(request):
     return render(request, "home.html")

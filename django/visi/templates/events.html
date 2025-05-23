@@ -3,9 +3,11 @@
 {% for event in events %}
 <div class="container">
     <div class="card">
+        <img src="{{ event.eventimage.url }}">
         <h2><a href="{% url 'event' event.id %}">{{ event.eventname }}</a></h2>
         <p>{{ event.eventdescription }}</p>
         <p>{{ event.eventdate }}</p>
+
     </div>
 </div>
 {% endfor %}

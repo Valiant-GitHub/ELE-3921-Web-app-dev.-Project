@@ -26,6 +26,9 @@ def event(request, event_id):
 @login_required
 def buyticket(request, event_id):
     event = get_object_or_404(Events, id=event_id)
+    if event.ticketsold >= event.eventvenue.venuecapacity:
+        return HttpResponse("This event is sold out.")
+
     if request.method == "POST":
         if not hasattr(request.user, 'fan_user'):
             return HttpResponse("Only fans can buy tickets.")

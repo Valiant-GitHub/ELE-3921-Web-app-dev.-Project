@@ -31,7 +31,7 @@ class Fan(models.Model):
     favartists = models.ManyToManyField(User, related_name="fan_favartists")
     eventsattended = models.ManyToManyField("Events", through="Tickets", related_name="fan_eventsattended")
     # The genres the user follows for events.
-    genres = models.ManyToManyField(Genre, related_name="fans", null=True, blank=True)
+    genres = models.ManyToManyField(Genre, related_name="fans", blank=True)
     def __str__(self):
         return self.user.profilename
 
@@ -47,8 +47,8 @@ class Artist(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="artist_user")
         # Artist image could be used to differentiate between a user image and an artist's promo image.
     artistimage = models.ImageField(upload_to="artistpics/", default="artistpics/default.png", null=True, blank=True)
-    artistfans = models.ManyToManyField(User, related_name="artist_fans", null=True, blank=True)
-    genres = models.ManyToManyField(Genre, related_name="artists", null=True, blank=True)
+    artistfans = models.ManyToManyField(User, related_name="artist_fans", blank=True)
+    genres = models.ManyToManyField(Genre, related_name="artists", blank=True)
     def __str__(self):
         return self.user.profilename
     
@@ -60,8 +60,8 @@ class Venue(models.Model):
     location = models.ForeignKey("Location", on_delete=models.CASCADE, related_name="venue_location")
     venuecapacity = models.IntegerField()
     venueimage = models.ImageField(upload_to="venuepics/", default="venuepics/default.png", null=True, blank=True)
-    venuefans = models.ManyToManyField(User, related_name="venue_fans", null=True, blank=True)
-    genres = models.ManyToManyField(Genre, related_name="venues", null=True, blank=True)
+    venuefans = models.ManyToManyField(User, related_name="venue_fans", blank=True)
+    genres = models.ManyToManyField(Genre, related_name="venues", blank=True)
     def __str__(self):
         return self.user.profilename
     
@@ -118,7 +118,7 @@ class Events(models.Model):
     # Not sure if we should create the metric for the progress bar here as a function or in the view.
     ticketprice = models.DecimalField(max_digits=5, decimal_places=2)
     genres = models.ManyToManyField(Genre, related_name="events")
-    authorized_doormen = models.ManyToManyField(Doorman, related_name="events", null=True, blank=True)
+    authorized_doormen = models.ManyToManyField(Doorman, related_name="events", blank=True)
     def __str__(self):
         return self.eventname
 
@@ -139,7 +139,7 @@ class Tickets(models.Model):
 class Booking(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="booking")
     availability = models.ForeignKey(Availability, on_delete=models.CASCADE, related_name="booking")
-    message = models.TextField(blank=True, null=True)
+    message = models.TextField(blank=True, null=True, max_length=1000)
     status = models.CharField(
         max_length=10,
         choices=[('pending', 'Pending'), ('approved', 'Approved'), ('rejected', 'Rejected')],

@@ -12,6 +12,13 @@ progress {
 
 
 </style>
+{% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
 <div class="container">
     <label for="progress">Tickets sold: {{ event.ticketsold }} / {{ event.eventvenue.venuecapacity }}</label>
     <progress id="progress" max="{{ event.eventvenue.venuecapacity }}" value="{{ event.ticketsold }}"></progress>

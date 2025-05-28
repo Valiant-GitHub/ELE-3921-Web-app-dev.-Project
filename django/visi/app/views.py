@@ -7,6 +7,7 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from .utils import role_required, profile_required
 from django.contrib import messages
+from django.utils import timezone
 
 # Create your views here.
 
@@ -16,8 +17,9 @@ def home(request):
 
 #--View for events--#
 def events(request):
-    events = Events.objects.all()
-    return render(request, "events.html", {"events": events})
+    events = Events.objects.filter(eventdate__gte=timezone.now()).order_by("eventdate")
+    pastevents = Events.objects.filter(eventdate__lt=timezone.now()).order_by("-eventdate")
+    return render(request, "events.html", {"events": events, "pastevents": pastevents})
 
 #--View for specific events--#
 def event(request, event_id):
@@ -31,7 +33,9 @@ def buyticket(request, event_id):
     if event.ticketsold >= event.eventvenue.venuecapacity:
         messages.error(request, "This event is sold out.")
         return redirect("event", event_id=event.id)
-
+    if event.eventdate < timezone.now().date():
+        messages.error(request, "This event has already passed.")
+        return redirect("event", event_id=event.id)
     if request.method == "POST":
         if not hasattr(request.user, "fan_user"):
             messages.error(request, "Only fans can buy tickets.")

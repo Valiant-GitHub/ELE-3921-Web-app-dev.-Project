@@ -1,13 +1,27 @@
 {% extends "base.html" %}
 {%block content%}
-<div class="cards">
-    {% for event in events %}
-    <div class="card">
-        <img src="{{ event.eventimage.url }}">
-        <h2><a href="{% url 'event' event.id %}">{{ event.eventname }}</a></h2>
-        <p>{{ event.eventdescription }}</p>
-        <p>{{ event.eventdate }}</p>
+<div class="container">
+    <h1>Upcoming events</h1>
+    <div class="cards">
+        {% for event in events %}
+        <div class="card">
+            <img src="{{ event.eventimage.url }}">
+            <h2><a href="{% url 'event' event.id %}">{{ event.eventname }}</a></h2>
+            <p>{{ event.eventdescription }}</p>
+            <p>{{ event.eventdate }}</p>
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
+    <h1>Past events</h1>
+    <div class="cards">
+        {% for event in pastevents %}
+        <div class="card">
+            <img src="{{ event.eventimage.url }}">
+            <h2><a href="{% url 'event' event.id %}">{{ event.eventname }}</a></h2>
+            <p>{{ event.eventdescription }}</p>
+            <p>{{ event.eventdate }}</p>
+        </div>
+        {% endfor %}
+    </div>
 </div>
 {%endblock%}

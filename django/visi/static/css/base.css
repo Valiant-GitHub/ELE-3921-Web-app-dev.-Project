@@ -1,133 +1,149 @@
 footer {
-    text-align: center;
-    padding: 3px;
-    background-color: rgb(19, 241, 241);
-    color: black;
-  }
+  text-align: center;
+  padding: 3px;
+  background-color: rgb(19, 241, 241);
+  color: black;
+}
 
-nav{
-    background:linear-gradient(to right,rgb(101, 232, 255), rgb(55, 131, 150));
-    overflow: hidden;
+nav {
+  background: linear-gradient(to right, rgb(101, 232, 255), rgb(55, 131, 150));
+  overflow: hidden;
 }
 
 nav ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
 }
 
 nav ul li {
-    float: left;
+  float: left;
 }
 
 nav ul li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 30px 20px;
-    text-decoration: none;
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 30px 20px;
+  text-decoration: none;
 }
 
 nav ul li a:hover {
-    background-color: #28bbff;
+  background-color: #28bbff;
 }
 
-body{
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    background: linear-gradient(rgb(255, 255, 255), rgb(255, 255, 255));
-    margin: 0;
+body {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  background: linear-gradient(rgb(255, 255, 255), rgb(255, 255, 255));
+  margin: 0;
 }
+
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
 /*buttons*/
-button{
-    background:linear-gradient(to right,rgb(101, 232, 255), rgb(55, 131, 150));
-    color: white;
-    border: 1px black solid;
-    border-radius: 5px;
-    cursor: pointer;
+button {
+  background: linear-gradient(to right, rgb(101, 232, 255), rgb(55, 131, 150));
+  color: white;
+  border: 1px black solid;
+  border-radius: 5px;
+  cursor: pointer;
 }
-button:hover{
-    background:linear-gradient(to right,rgb(44, 99, 109), rgb(21, 51, 58));
+
+button:hover {
+  background: linear-gradient(to right, rgb(44, 99, 109), rgb(21, 51, 58));
 }
 
 /*cards*/
-.card{
-    background-color: whitesmoke;
-    border: 1px rgb(118, 147, 245) solid;
-    box-shadow: 0 1px 5px;
-    padding: 5%;
-    font-size: medium;
-    border-radius: 10px;
+.card {
+  background-color: whitesmoke;
+  border: 1px rgb(118, 147, 245) solid;
+  box-shadow: 0 1px 5px;
+  padding: 5%;
+  font-size: medium;
+  border-radius: 10px;
 }
-.card a{
-    display: block;
-    height: 100%;
-    width: 100%;
-    color: inherit;
-    text-decoration: none;
-    
+
+.card a {
+  display: block;
+  height: 100%;
+  width: 100%;
+  color: inherit;
+  text-decoration: none;
+
 }
+
 .card img {
-    float: right;
-    width: 120px;
-    height: 120px;
-    margin-left: 16px;
-    margin-bottom: 8px;
-    border-radius: 8px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-    object-fit: cover;
-    vertical-align: top;
+  float: right;
+  width: 120px;
+  height: 120px;
+  margin-left: 16px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  object-fit: cover;
+  vertical-align: top;
 }
+
 /*forms*/
-form input{
-    width: 100%;
+form input {
+  width: 100%;
 }
-form textarea{
-    width: 100%;
+
+form textarea {
+  width: 100%;
 }
-form ul{
-    list-style-type:none;
+
+form ul {
+  list-style-type: none;
 }
 
 /* General table cell styles */
 table td {
-    max-width: 200px; /* Limit the width of table cells */
-    overflow-wrap: break-word; /* Break long words */
-    word-wrap: break-word; /* Break long words */
-    word-break: break-all; /* Force break for long unbroken words */
-    white-space: normal; /* Allow text to wrap */
-    overflow: hidden; /* Hide overflowing text */
-    text-overflow: ellipsis; /* Add "..." for truncated text */
+  max-width: 200px;
+  /* Limit the width of table cells */
+  overflow-wrap: break-word;
+  /* Break long words */
+  word-wrap: break-word;
+  /* Break long words */
+  word-break: break-all;
+  /* Force break for long unbroken words */
+  white-space: normal;
+  /* Allow text to wrap */
+  overflow: hidden;
+  /* Hide overflowing text */
+  text-overflow: ellipsis;
+  /* Add "..." for truncated text */
 }
 
 /* Specific styles for availability and booking tables */
 .availability-table td,
 .booking-table td {
-    max-width: 250px; /* Adjust as needed */
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    word-break: break-all; /* Force break for long unbroken words */
-    white-space: normal;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  max-width: 250px;
+  /* Adjust as needed */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-all;
+  /* Force break for long unbroken words */
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .btn-danger {
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    border-radius: 5px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 5px;
 }
 
 .btn-danger:hover {
-    background-color: #c82333;
+  background-color: #c82333;
 }
 
 /* Add this to your CSS file */
@@ -207,8 +223,8 @@ table td {
   Bootstrap column gutter fix 
   - Adds horizontal padding to columns inside .form-row for consistent spacing
 */
-.form-row > .col,
-.form-row > [class*="col-"] {
+.form-row>.col,
+.form-row>[class*="col-"] {
   padding-right: 15px;
   padding-left: 15px;
 }
@@ -243,7 +259,8 @@ table td {
   line-height: 2.0em;
 }
 
-.messages li.info, .messages li.debug {
+.messages li.info,
+.messages li.debug {
   background-color: #d0ebff;
 }
 

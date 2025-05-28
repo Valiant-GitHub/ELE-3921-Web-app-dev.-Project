@@ -4,59 +4,62 @@
 
 <div class="container">
     <h2 class="mb-4">Create Event</h2>
-    
+
     <div class="booking-info mb-4 p-3 bg-light border rounded">
         <h4 class="mb-3">Booking Details</h4>
-        
+
         <!-- Show who initiated the booking (the OTHER party) -->
         <p class="mb-3">
             <strong>Booking offer by:</strong>
             {% if booking.user.role == 'artist' %}
-                Artist: {{ booking.user.profilename|default:booking.user.username }}
+            Artist: {{ booking.user.profilename|default:booking.user.username }}
             {% elif booking.user.role == 'venue' %}
-                Venue: {{ booking.user.profilename|default:booking.user.username }}
+            Venue: {{ booking.user.profilename|default:booking.user.username }}
             {% endif %}
         </p>
-        
+
         <p>
-            <strong>Date/Time:</strong> {{ availability.start_time|date:"l, F j, Y" }} at {{ availability.start_time|time:"g:i A" }}
+            <strong>Date/Time:</strong> {{ availability.start_time|date:"l, F j, Y" }} at {{
+            availability.start_time|time:"g:i A" }}
         </p>
-        
+
         {% if form.eventvenue.value %}
         <p>
             <strong>Selected Venue:</strong>
             {% for venue_choice in form.eventvenue.field.choices %}
-                {% if venue_choice.0 == form.eventvenue.value %}
-                    {{ venue_choice.1 }}
-                {% endif %}
+            {% if venue_choice.0 == form.eventvenue.value %}
+            {{ venue_choice.1 }}
+            {% endif %}
             {% endfor %}
         </p>
         {% endif %}
-        
+
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="availability_description">Original Availability Description:</label>
-                    <textarea class="form-control" id="availability_description" rows="3" readonly>{{ availability.description }}</textarea>
+                    <textarea class="form-control" id="availability_description" rows="3"
+                        readonly>{{ availability.description }}</textarea>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="booking_message">Booking Message:</label>
-                    <textarea class="form-control" id="booking_message" rows="3" readonly>{{ booking.message|default:"No message provided." }}</textarea>
+                    <textarea class="form-control" id="booking_message" rows="3"
+                        readonly>{{ booking.message|default:"No message provided." }}</textarea>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        
+
         <div class="form-group mb-3">
             <label for="{{ form.eventname.id_for_label }}">Event Name:</label>
             {{ form.eventname }}
             {% if form.eventname.errors %}
-                <div class="error text-danger">{{ form.eventname.errors }}</div>
+            <div class="error text-danger">{{ form.eventname.errors }}</div>
             {% endif %}
         </div>
 
@@ -65,65 +68,65 @@
                 <label for="{{ form.eventdate.id_for_label }}">Date:</label>
                 {{ form.eventdate }}
                 {% if form.eventdate.errors %}
-                    <div class="error text-danger">{{ form.eventdate.errors }}</div>
+                <div class="error text-danger">{{ form.eventdate.errors }}</div>
                 {% endif %}
             </div>
             <div class="form-group col-md-6">
                 <label for="{{ form.eventtime.id_for_label }}">Time:</label>
                 {{ form.eventtime }}
                 {% if form.eventtime.errors %}
-                    <div class="error text-danger">{{ form.eventtime.errors }}</div>
+                <div class="error text-danger">{{ form.eventtime.errors }}</div>
                 {% endif %}
             </div>
         </div>
-        
+
         <div class="form-row mb-3">
             <div class="form-group col-md-6">
                 <label for="{{ form.eventvenue.id_for_label }}">Venue:</label>
                 {{ form.eventvenue }}
                 {% if form.eventvenue.errors %}
-                    <div class="error text-danger">{{ form.eventvenue.errors }}</div>
+                <div class="error text-danger">{{ form.eventvenue.errors }}</div>
                 {% endif %}
             </div>
             <div class="form-group col-md-6">
                 <label for="{{ form.location.id_for_label }}">Location:</label>
                 {{ form.location }}
                 {% if form.location.errors %}
-                    <div class="error text-danger">{{ form.location.errors }}</div>
+                <div class="error text-danger">{{ form.location.errors }}</div>
                 {% endif %}
             </div>
         </div>
-        
+
         <div class="form-group mb-3">
             <label for="{{ form.eventdescription.id_for_label }}">Description:</label>
             {{ form.eventdescription }}
             {% if form.eventdescription.errors %}
-                <div class="error text-danger">{{ form.eventdescription.errors }}</div>
+            <div class="error text-danger">{{ form.eventdescription.errors }}</div>
             {% endif %}
         </div>
-        
+
         <div class="form-row mb-3">
             <div class="form-group col-md-6">
                 <label for="{{ form.ticketprice.id_for_label }}">Ticket Price:</label>
                 {{ form.ticketprice }}
                 {% if form.ticketprice.errors %}
-                    <div class="error text-danger">{{ form.ticketprice.errors }}</div>
+                <div class="error text-danger">{{ form.ticketprice.errors }}</div>
                 {% endif %}
             </div>
             <div class="form-group col-md-6">
                 <label for="{{ form.genres.id_for_label }}">Genres:</label>
                 {{ form.genres }}
                 {% if form.genres.errors %}
-                    <div class="error text-danger">{{ form.genres.errors }}</div>
+                <div class="error text-danger">{{ form.genres.errors }}</div>
                 {% endif %}
             </div>
         </div>
-        
+
         <div class="form-group mb-4">
             <label for="{{ form.eventimage.id_for_label }}">Event Image:</label>
             {{ form.eventimage }}
             {% if form.eventimage.errors %}
-                <div class="error text-danger">{{ form.eventimage.errors }}</div>
+            <div class="error text-danger">{{ form.eventimage.errors }}</div>
             {% endif %}
         </div>
 

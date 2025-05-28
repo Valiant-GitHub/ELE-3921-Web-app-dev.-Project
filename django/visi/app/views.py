@@ -1,5 +1,5 @@
 import random
-from django.http import HttpResponseForbidden,HttpResponse
+from django.http import HttpResponseForbidden, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from forms import *
@@ -10,79 +10,88 @@ from django.contrib import messages
 
 # Create your views here.
 
-
+#--View for home--#
 def home(request):
     return render(request, "home.html")
 
-
-def events(request):    
+#--View for events--#
+def events(request):
     events = Events.objects.all()
     return render(request, "events.html", {"events": events})
 
+#--View for specific events--#
 def event(request, event_id):
     event = get_object_or_404(Events, id=event_id)
     return render(request, "event.html", {"event": event})
 
+#--View for ticket purchasing--#
 @login_required
 def buyticket(request, event_id):
     event = get_object_or_404(Events, id=event_id)
     if event.ticketsold >= event.eventvenue.venuecapacity:
         messages.error(request, "This event is sold out.")
-        return redirect('event', event_id=event.id)
+        return redirect("event", event_id=event.id)
 
     if request.method == "POST":
-        if not hasattr(request.user, 'fan_user'):
+        if not hasattr(request.user, "fan_user"):
             messages.error(request, "Only fans can buy tickets.")
-            return redirect('event', event_id=event.id)
+            return redirect("event", event_id=event.id)
 
         while True:
-            ticketnumber = random.randint(10**15, 10**16 - 1)  
+            ticketnumber = random.randint(10**15, 10**16 - 1)
             if not Tickets.objects.filter(ticketnumber=ticketnumber).exists():
                 break
 
         ticket = Tickets.objects.create(
-            event=event,
-            fan=request.user.fan_user,
-            ticketnumber=ticketnumber
+            event=event, fan=request.user.fan_user, ticketnumber=ticketnumber
         )
 
         event.ticketsold += 1
         event.save()
 
-        return redirect('ticket', ticketnumber=ticket.id)
+        return redirect("ticket", ticketnumber=ticket.id)
     return HttpResponse("Theres an issue.")
 
-def about(request):
-    return render(request, "about.html")
+
+
+#--View for user profile--#
 @profile_required
-@login_required 
+@login_required
 def profile(request):
     return render(request, "profile.html")
 
+#--View for signup--#
 def signup(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = SignUpForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save()
-            login(request, user) 
-            return redirect('createprofile')  
+            login(request, user)
+            return redirect("createprofile")
     else:
         form = SignUpForm()
-    return render(request, 'signup.html', {'form': form})
+    return render(request, "signup.html", {"form": form})
 
+#--View for ticket--#
 @login_required
 def ticketdetails(request, ticketnumber):
     ticket = get_object_or_404(Tickets, id=ticketnumber)
     if ticket.fan.user != request.user:
         return HttpResponse("You do not have permission to view this ticket.")
-    
+
     return render(request, "ticket.html", {"ticket": ticket})
 
+#--View for profile creation--#
 @login_required
 def createprofile(request):
     user = request.user
-#added a check to if the user already has a profile
-    if hasattr(user, "fan_user") or hasattr(user, "artist_user") or hasattr(user, "venue_user") or hasattr(user, "doorman_user"):
+    # added a check to if the user already has a profile
+    if (
+        hasattr(user, "fan_user")
+        or hasattr(user, "artist_user")
+        or hasattr(user, "venue_user")
+        or hasattr(user, "doorman_user")
+    ):
         return redirect("profile")
     if user.role == "fan":
         form_class = FanProfileForm
@@ -93,54 +102,54 @@ def createprofile(request):
     elif user.role == "doorman":
         form_class = DoormanProfileForm
     else:
-        return redirect('home') 
+        return redirect("home")
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = form_class(request.POST, request.FILES)
         if form.is_valid():
             profile = form.save(commit=False)
             profile.user = user
             profile.save()
-            return redirect('home') 
+            return redirect("home")
     else:
         form = form_class()
 
-    return render(request, 'profilecreation.html', {'form': form})
+    return render(request, "profilecreation.html", {"form": form})
 
 
 def save(self, commit=True):
     instance = super().save(commit=False)
     # Debugging: Print the user and their role
     print(f"Saving availability for user: {self.user}, role: {self.user.role}")
-    
+
     # Set the artist or venue based on the user's role
-    if self.user.role == 'artist':
+    if self.user.role == "artist":
         instance.artist = self.user.artist_user
-    elif self.user.role == 'venue':
+    elif self.user.role == "venue":
         instance.venue = self.user.venue_user
     else:
         print("User role is not artist or venue.")
-    
+
     if commit:
         instance.save()
     return instance
 
-
+#--View for posting availability--#
 @profile_required
 @login_required
-@role_required(['artist', 'venue'])
+@role_required(["artist", "venue"])
 def availability(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = AvailabilityForm(request.POST, user=request.user)
         if form.is_valid():
             form.save()
-            return redirect('availabilitysuccess')  # Redirect to a success page
+            return redirect("availabilitysuccess")  # Redirect to a success page
     else:
         form = AvailabilityForm(user=request.user)
 
-    return render(request, 'availabilityform.html', {'form': form})
+    return render(request, "availabilityform.html", {"form": form})
 
-
+#--View for editing profile--#
 @profile_required
 @login_required
 def editprofile(request):
@@ -171,83 +180,97 @@ def editprofile(request):
                 rolespecific.save()
                 return redirect("profile")
 
-    return render(request, "editprofile.html", {
-        "profilepic": profilepic,
-        "rolespecific": rolespecific,
-    })
+    return render(
+        request,
+        "editprofile.html",
+        {
+            "profilepic": profilepic,
+            "rolespecific": rolespecific,
+        },
+    )
 
-
+#--View for success page for posting availability--#
 @profile_required
 @login_required
-@role_required(['artist', 'venue'])
+@role_required(["artist", "venue"])
 def availability_success(request):
-    return render(request, 'availabilitysuccess.html')
+    return render(request, "availabilitysuccess.html")
+
 
 def artistprofile(request, artist_id):
     artist = get_object_or_404(Artist, id=artist_id)
     events = Events.objects.filter(EventArtists=artist)
-    return render(request, "artistprofile.html",{"artist":artist, "events":events})
+    return render(request, "artistprofile.html", {"artist": artist, "events": events})
+
 
 def venueprofile(request, venue_id):
     venue = get_object_or_404(Venue, id=venue_id)
     events = Events.objects.filter(eventvenue=venue)
-    photoreel = venue.user.photoreel.all()  
-    return render(request, "venueprofile.html", {"venue": venue, "events": events, "photoreel": photoreel})
+    photoreel = venue.user.photoreel.all()
+    return render(
+        request,
+        "venueprofile.html",
+        {"venue": venue, "events": events, "photoreel": photoreel},
+    )
 
+#--View for availabilites--#
 @profile_required
 @login_required
-@role_required(['artist', 'venue'])
+@role_required(["artist", "venue"])
 def available(request):
-    availabilities = Availability.objects.all().order_by('start_time')
-    return render(request, 'available.html', {'availabilities': availabilities})
+    availabilities = Availability.objects.all().order_by("start_time")
+    return render(request, "available.html", {"availabilities": availabilities})
 
+#--View for requesting to book--#
 @profile_required
 @login_required
-@role_required(['artist', 'venue'])
+@role_required(["artist", "venue"])
 def requestbooking(request, availability_id):
     availability = get_object_or_404(Availability, id=availability_id)
 
     # Check if the user is trying to book their own availability
     is_owner = False
-        
+
     if availability.artist and availability.artist.user == request.user:
         is_owner = True
-            
+
     if availability.venue and availability.venue.user == request.user:
         is_owner = True
-            
+
     if is_owner:
         messages.error(request, "You cannot book your own availability.")
-        return redirect('available')
+        return redirect("available")
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = BookingForm(request.POST)
         if form.is_valid():
             booking = form.save(commit=False)
             booking.user = request.user
             booking.availability = availability
             booking.save()
-            return redirect('bookingsuccess')  # Redirect to a success page
+            return redirect("bookingsuccess")  # Redirect to a success page
     else:
         form = BookingForm()
-    return render(request, 'booking.html', {'form': form, 'availability': availability})
+    return render(request, "booking.html", {"form": form, "availability": availability})
 
+#--View for showing successful booking--#
 @profile_required
 @login_required
-@role_required(['artist', 'venue'])
+@role_required(["artist", "venue"])
 def bookingsuccess(request):
-    return render(request, 'bookingsuccess.html')
+    return render(request, "bookingsuccess.html")
 
+#--View for dashboard--#
 @profile_required
 @login_required
-@role_required(['artist', 'venue'])
+@role_required(["artist", "venue"])
 def dashboard(request):
     # Get the logged-in user's availability slots and events
-    if request.user.role == 'artist':
+    if request.user.role == "artist":
         availabilities = Availability.objects.filter(artist__user=request.user)
         events = Events.objects.filter(EventArtists=request.user.artist_user)
 
-    elif request.user.role == 'venue':
+    elif request.user.role == "venue":
         availabilities = Availability.objects.filter(venue__user=request.user)
         events = Events.objects.filter(eventvenue=request.user.venue_user)
 
@@ -261,163 +284,208 @@ def dashboard(request):
     calendar_events = []
     for booking in bookings:
         color = (
-            'green' if booking.status == 'approved' else
-            'orange' if booking.status == 'pending' else
-            'red'
+            "green"
+            if booking.status == "approved"
+            else "orange" if booking.status == "pending" else "red"
         )
-        calendar_events.append({
-            'title': booking.availability.description,
-            'start': booking.availability.start_time.isoformat(),
-            'end': booking.availability.end_time.isoformat(),
-            'color': color,
-        })
-        
+        calendar_events.append(
+            {
+                "title": booking.availability.description,
+                "start": booking.availability.start_time.isoformat(),
+                "end": booking.availability.end_time.isoformat(),
+                "color": color,
+            }
+        )
+
     for event in events:
-        calendar_events.append({
-            'title': event.eventname,
-            'start': event.eventdate.isoformat(),
-            'color': 'blue',  
-        })
+        calendar_events.append(
+            {
+                "title": event.eventname,
+                "start": event.eventdate.isoformat(),
+                "color": "blue",
+            }
+        )
 
-
-    if request.method == 'POST':
-        booking_id = request.POST.get('booking_id')
-        action = request.POST.get('action')  # 'approve' or 'reject'
+    if request.method == "POST":
+        booking_id = request.POST.get("booking_id")
+        action = request.POST.get("action")  # 'approve' or 'reject'
         booking = get_object_or_404(Booking, id=booking_id)
 
-        if action == 'approve':
-            booking.status = 'approved'
-        elif action == 'reject':
-            booking.status = 'rejected'
+        if action == "approve":
+            booking.status = "approved"
+        elif action == "reject":
+            booking.status = "rejected"
         booking.save()
 
-        return redirect('dashboard')  # Redirect back to the dashboard
+        return redirect("dashboard")  # Redirect back to the dashboard
 
-    return render(request, 'dashboard.html', {
-        'availabilities': availabilities,
-        'bookings': bookings,
-        'calendar_events': calendar_events,  # Pass calendar data to the template
-    })
+    return render(
+        request,
+        "dashboard.html",
+        {
+            "availabilities": availabilities,
+            "bookings": bookings,
+            "calendar_events": calendar_events,  # Pass calendar data to the template
+        },
+    )
 
-
+#--View for details on availability--#
 @profile_required
 @login_required
-@role_required(['artist', 'venue'])
+@role_required(["artist", "venue"])
 def listingdetail(request, listing_id, listing_type):
     """
     View to handle both availability and booking details, and allow deletion if the user is the creator.
     """
-    if listing_type == 'availability':
+    if listing_type == "availability":
         listing = get_object_or_404(Availability, id=listing_id)
-    elif listing_type == 'booking':
+    elif listing_type == "booking":
         listing = get_object_or_404(Booking, id=listing_id)
     else:
-        return render(request, '404.html', status=404)  # Handle invalid listing type
+        return render(request, "404.html", status=404)  # Handle invalid listing type
 
     # Handle deletion
-    
-    if request.method == 'POST' and 'delete' in request.POST:
+
+    if request.method == "POST" and "delete" in request.POST:
         can_delete = False
-        if listing_type == 'availability':
-            if (getattr(listing, 'artist', None) and listing.artist.user == request.user) or \
-                (getattr(listing, 'venue', None) and listing.venue.user == request.user):
+        if listing_type == "availability":
+            if (
+                getattr(listing, "artist", None) and listing.artist.user == request.user
+            ) or (
+                getattr(listing, "venue", None) and listing.venue.user == request.user
+            ):
                 can_delete = True
-        elif listing_type == 'booking':
-            if  (getattr(listing.availability, 'artist', None) and listing.availability.artist.user == request.user) or \
-                (getattr(listing.availability, 'venue', None) and listing.availability.venue.user == request.user):
+        elif listing_type == "booking":
+            if (
+                getattr(listing.availability, "artist", None)
+                and listing.availability.artist.user == request.user
+            ) or (
+                getattr(listing.availability, "venue", None)
+                and listing.availability.venue.user == request.user
+            ):
                 can_delete = True
 
         if can_delete:
             listing.delete()
-            return redirect('dashboard')
+            return redirect("dashboard")
         else:
             return HttpResponseForbidden("You are not allowed to delete this listing.")
     # ...existing code...
-    return render(request, 'listingdetail.html', {'listing': listing, 'listing_type': listing_type})
+    return render(
+        request,
+        "listingdetail.html",
+        {"listing": listing, "listing_type": listing_type},
+    )
 
-
+#--View for booking--#
 def handlebookingaction(request):
-    if request.method == 'POST':
-        booking_id = request.POST.get('booking_id')
-        action = request.POST.get('action')
+    if request.method == "POST":
+        booking_id = request.POST.get("booking_id")
+        action = request.POST.get("action")
         booking = Booking.objects.get(id=booking_id)
-        
-        if action == 'approve':
+
+        if action == "approve":
             # Store booking ID in session and redirect to event creation form
-            request.session['approved_booking_id'] = booking_id
-            return redirect('createevent')
-        elif action == 'reject':
+            request.session["approved_booking_id"] = booking_id
+            return redirect("createevent")
+        elif action == "reject":
             booking.delete()
-            return redirect('dashboard')
-        
-    return redirect('dashboard')
- 
+            return redirect("dashboard")
+
+    return redirect("dashboard")
+
+#--View for showing users events--#
 @profile_required
 @login_required
-@role_required(['artist', 'venue'])
+@role_required(["artist", "venue"])
 def myevents(request):
     user = request.user
     events = []
-    
-    if user.role == 'artist' and hasattr(user, 'artist_user'):
+
+    if user.role == "artist" and hasattr(user, "artist_user"):
         artist_events = Events.objects.filter(EventArtists=user.artist_user)
         events.extend(artist_events)
-    
-    if user.role == 'venue' and hasattr(user, 'venue_user'):
+
+    if user.role == "venue" and hasattr(user, "venue_user"):
         venue_events = Events.objects.filter(eventvenue=user.venue_user)
         events.extend(venue_events)
-    
+
     # Remove duplicates
     events = list(set(events))
-    
-    return render(request, 'myevents.html', {'events': events})
 
+    return render(request, "myevents.html", {"events": events})
+
+#--View for creating event--#
 @profile_required
 @login_required
-@role_required(['artist', 'venue'])
+@role_required(["artist", "venue"])
 def createevent(request):
     # Get the approved booking from session
-    booking_id = request.session.get('approved_booking_id')
+    booking_id = request.session.get("approved_booking_id")
     if not booking_id:
-        return redirect('dashboard')
-    
+        return redirect("dashboard")
+
     try:
         booking = Booking.objects.get(id=booking_id)
         availability = booking.availability
     except Booking.DoesNotExist:
-        return redirect('dashboard')
-    
+        return redirect("dashboard")
+
     # Create a better event name combining artist and venue
     event_name = availability.description
-    
+
     # Determine if the booking requester is different from the availability owner
     requesting_artist = None
     requesting_venue = None
-    
+
     # If availability belongs to venue, requester might be artist
-    if availability.venue and booking.user.role == 'artist' and hasattr(booking.user, 'artist_user'):
+    if (
+        availability.venue
+        and booking.user.role == "artist"
+        and hasattr(booking.user, "artist_user")
+    ):
         requesting_artist = booking.user.artist_user
-    
+
     # If availability belongs to artist, requester might be venue
-    if availability.artist and booking.user.role == 'venue' and hasattr(booking.user, 'venue_user'):
+    if (
+        availability.artist
+        and booking.user.role == "venue"
+        and hasattr(booking.user, "venue_user")
+    ):
         requesting_venue = booking.user.venue_user
 
     # Create artist+venue combo name
     actual_artist = requesting_artist or availability.artist
     actual_venue = requesting_venue or availability.venue
-    
+
     if actual_artist and actual_venue:
-        artist_name = actual_artist.user.profilename if hasattr(actual_artist.user, 'profilename') else actual_artist.user.username
-        venue_name = actual_venue.user.profilename if hasattr(actual_venue.user, 'profilename') else actual_venue.user.username
+        artist_name = (
+            actual_artist.user.profilename
+            if hasattr(actual_artist.user, "profilename")
+            else actual_artist.user.username
+        )
+        venue_name = (
+            actual_venue.user.profilename
+            if hasattr(actual_venue.user, "profilename")
+            else actual_venue.user.username
+        )
         event_name = f"{artist_name} at {venue_name}"
     elif actual_artist:
-        artist_name = actual_artist.user.profilename if hasattr(actual_artist.user, 'profilename') else actual_artist.user.username
+        artist_name = (
+            actual_artist.user.profilename
+            if hasattr(actual_artist.user, "profilename")
+            else actual_artist.user.username
+        )
         event_name = f"{artist_name} performance"
     elif actual_venue:
-        venue_name = actual_venue.user.profilename if hasattr(actual_venue.user, 'profilename') else actual_venue.user.username
+        venue_name = (
+            actual_venue.user.profilename
+            if hasattr(actual_venue.user, "profilename")
+            else actual_venue.user.username
+        )
         event_name = f"Event at {venue_name}"
-    
-    if request.method == 'POST':
+
+    if request.method == "POST":
         form = EventForm(request.POST, request.FILES)
         if form.is_valid():
             event = form.save()
@@ -428,30 +496,30 @@ def createevent(request):
             booking.delete()
             availability.delete()
             # Clear session
-            del request.session['approved_booking_id']
-            return redirect('event', event_id=event.id)
+            del request.session["approved_booking_id"]
+            return redirect("event", event_id=event.id)
     else:
         # Prefill form with data from availability
         initial_data = {
-            'eventname': event_name,
-            'eventdate': availability.start_time.date(),
-            'eventtime': availability.start_time.time(),
-            'eventdescription': availability.description,
-            'ticketprice': 0.00,  # Default value
+            "eventname": event_name,
+            "eventdate": availability.start_time.date(),
+            "eventtime": availability.start_time.time(),
+            "eventdescription": availability.description,
+            "ticketprice": 0.00,  # Default value
         }
-        
+
         # Auto-select the correct venue
         if actual_venue:
-            initial_data['eventvenue'] = actual_venue.id
-            
+            initial_data["eventvenue"] = actual_venue.id
+
             # Auto-select the venue's location if it exists
-            if hasattr(actual_venue, 'location') and actual_venue.location:
-                initial_data['location'] = actual_venue.location.id
-                
+            if hasattr(actual_venue, "location") and actual_venue.location:
+                initial_data["location"] = actual_venue.location.id
+
         form = EventForm(initial=initial_data)
-    
-    return render(request, 'createevent.html', {
-        'form': form,
-        'booking': booking,
-        'availability': availability
-    })
+
+    return render(
+        request,
+        "createevent.html",
+        {"form": form, "booking": booking, "availability": availability},
+    )

@@ -2,73 +2,90 @@
 {% block morecssprio%}
 
 <style>
-.mySlides {display:none}
-.w3-left, .w3-right, .w3-badge {cursor:pointer}
-.w3-badge {height:13px;width:13px;padding:0}
+    .mySlides {
+        display: none
+    }
+
+    .w3-left,
+    .w3-right,
+    .w3-badge {
+        cursor: pointer
+    }
+
+    .w3-badge {
+        height: 13px;
+        width: 13px;
+        padding: 0
+    }
 </style>
 <style>
-    .profilepic{
+    .profilepic {
         display: flex;
-        justify-content: center ;
-        background:linear-gradient(to right,rgb(101, 232, 255), rgb(55, 131, 150));
+        justify-content: center;
+        background: linear-gradient(to right, rgb(101, 232, 255), rgb(55, 131, 150));
         flex-direction: column;
         align-items: center;
-        
+
     }
-    img.profilepicture{
+
+    img.profilepicture {
         border-radius: 50%;
         padding: 1%;
         border: 1%;
     }
-    .settings{
+
+    .settings {
         bottom: 5px;
         position: relative;
     }
-
-
 </style>
 
 {%endblock%}
 
 {%block content%}
-<div class="profilepic"><img class="profilepicture" src="{{ venue.user.profilepic.url }}" width="20%" alt="Profile Picture"><h1>{{ venue.user.profilename }}</h1></div>
+<div class="profilepic"><img class="profilepicture" src="{{ venue.user.profilepic.url }}" width="20%"
+        alt="Profile Picture">
+    <h1>{{ venue.user.profilename }}</h1>
+</div>
 <div class="container">
-<h1>About {{venue.user.profilename}}:</h1>
-<p>{{venue.user.bio}}</p>
+    <h1>About {{venue.user.profilename}}:</h1>
+    <p>{{venue.user.bio}}</p>
 
 
-<h1>Upcoming events:</h1>
+    <h1>Upcoming events:</h1>
     {%if events%}
-        {%for event in events%}
-            <div class="card">
-                <h2><a href="{% url 'event' event.id %}">{{ event.eventname }}</a></h2>
-                <p>{{event.eventdescription}}</p>
-                <p>At {{event.eventtime}} {{event.eventdate}}</p>
-            </div>
-        {%endfor%}
+    {%for event in events%}
+    <div class="card">
+        <h2><a href="{% url 'event' event.id %}">{{ event.eventname }}</a></h2>
+        <p>{{event.eventdescription}}</p>
+        <p>At {{event.eventtime}} {{event.eventdate}}</p>
+    </div>
+    {%endfor%}
     {%else%}
-            <p>No upcoming events</p>
+    <p>No upcoming events</p>
     {%endif%}
 
-<h1>Photos:</h1>
-<div class="w3-content w3-display-container" style="max-height:800px">
-    {% if photoreel %}
+    <h1>Photos:</h1>
+    <div class="w3-content w3-display-container" style="max-height:800px">
+        {% if photoreel %}
         {% for photo in photoreel %}
-            <img class="mySlides" src="{{ photo.image.url }}" style="width:100%; display:none;">
+        <img class="mySlides" src="{{ photo.image.url }}" style="width:100%; display:none;">
         {% endfor %}
-        <div class="w3-center w3-container w3-section w3-large w3-text-white w3-display-bottommiddle" style="width:100%">
+        <div class="w3-center w3-container w3-section w3-large w3-text-white w3-display-bottommiddle"
+            style="width:100%">
             <div class="w3-left w3-hover-text-khaki" onclick="plusDivs(-1)">&#10094;</div>
             <div class="w3-right w3-hover-text-khaki" onclick="plusDivs(1)">&#10095;</div>
             {% for photo in photoreel %}
-                <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv({{ forloop.counter }})"></span>
+            <span class="w3-badge demo w3-border w3-transparent w3-hover-white"
+                onclick="currentDiv({{ forloop.counter }})"></span>
             {% endfor %}
         </div>
-    {% else %}
+        {% else %}
         <p>No photos available.</p>
-    {% endif %}
-</div>
+        {% endif %}
+    </div>
 
-  
+
 </div>
 
 
@@ -77,31 +94,31 @@
 <script>
     var slideIndex = 1;
     showDivs(slideIndex);
-    
+
     function plusDivs(n) {
-      showDivs(slideIndex += n);
+        showDivs(slideIndex += n);
     }
-    
+
     function currentDiv(n) {
-      showDivs(slideIndex = n);
+        showDivs(slideIndex = n);
     }
-    
+
     function showDivs(n) {
-      var i;
-      var x = document.getElementsByClassName("mySlides");
-      var dots = document.getElementsByClassName("demo");
-      if (n > x.length) {slideIndex = 1}
-      if (n < 1) {slideIndex = x.length}
-      for (i = 0; i < x.length; i++) {
-        x[i].style.display = "none";  
-      }
-      for (i = 0; i < dots.length; i++) {
-        dots[i].className = dots[i].className.replace(" w3-white", "");
-      }
-      x[slideIndex-1].style.display = "block";  
-      dots[slideIndex-1].className += " w3-white";
+        var i;
+        var x = document.getElementsByClassName("mySlides");
+        var dots = document.getElementsByClassName("demo");
+        if (n > x.length) { slideIndex = 1 }
+        if (n < 1) { slideIndex = x.length }
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+        }
+        for (i = 0; i < dots.length; i++) {
+            dots[i].className = dots[i].className.replace(" w3-white", "");
+        }
+        x[slideIndex - 1].style.display = "block";
+        dots[slideIndex - 1].className += " w3-white";
     }
-    </script>
-    
+</script>
+
 
 {%endblock%}

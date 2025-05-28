@@ -3,26 +3,26 @@
 {% block content %}
 <div class="container">
     <h2>My Events</h2>
-    
+
     {% if events %}
-        <div class="row">
-            {% for event in events %}
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        {% if event.eventimage %}
-                            <img src="{{ event.eventimage.url }}" class="card-img-top" alt="{{ event.eventname }}">
-                        {% endif %}
-                        <div class="card-body">
-                            <h5 class="card-title">{{ event.eventname }}</h5>
-                            <p class="card-text">{{ event.eventdate }} at {{ event.eventtime }}</p>
-                            <a href="{% url 'event' event.id %}" class="btn btn-primary">View Event</a>
-                        </div>
-                    </div>
+    <div class="row">
+        {% for event in events %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                {% if event.eventimage %}
+                <img src="{{ event.eventimage.url }}" class="card-img-top" alt="{{ event.eventname }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ event.eventname }}</h5>
+                    <p class="card-text">{{ event.eventdate }} at {{ event.eventtime }}</p>
+                    <a href="{% url 'event' event.id %}" class="btn btn-primary">View Event</a>
                 </div>
-            {% endfor %}
+            </div>
         </div>
+        {% endfor %}
+    </div>
     {% else %}
-        <p>You don't have any events yet.</p>
+    <p>You don't have any events yet.</p>
     {% endif %}
 </div>
 {% endblock %}

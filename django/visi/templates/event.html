@@ -2,39 +2,36 @@
 
 {% block content %}
 <style>
-progress {
-  width: 100%;
-  height: 20px;
-  margin-bottom: 10px;
-  appearance: none;
-}
-
-
-
+  progress {
+    width: 100%;
+    height: 20px;
+    margin-bottom: 10px;
+    appearance: none;
+  }
 </style>
 {% if messages %}
-  <ul class="messages">
-    {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+<ul class="messages">
+  {% for message in messages %}
+  <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
     {% endfor %}
-  </ul>
+</ul>
 {% endif %}
 <div class="container">
-    <label for="progress">Tickets sold: {{ event.ticketsold }} / {{ event.eventvenue.venuecapacity }}</label>
-    <progress id="progress" max="{{ event.eventvenue.venuecapacity }}" value="{{ event.ticketsold }}"></progress>
-    <h2>{{ event.eventname }}</h2>
-    <p>{{ event.eventdescription }}</p>
-    <p>{{ event.eventdate }}</p>
-    <p>Location: {{ event.location }}</p>
-    <p>Time: {{ event.eventtime }}</p>
-    <p>Price: {{ event.ticketprice }}</p>
-    {% for artist in event.EventArtists.all %}
-        <p>Artist: <a href="{% url 'artistprofile' artist.id %}">{{ artist.user.profilename }}</a></p>
-    {% endfor %}
-    <p>Venue: <a href="{% url 'venueprofile' event.eventvenue.id %}">{{ event.eventvenue }}</a></p>
-    <form method="post" action="{% url 'buyticket' event.id %}">
-        {% csrf_token %}
-        <button type="submit">Buy Ticket</button>
-    </form>
+  <label for="progress">Tickets sold: {{ event.ticketsold }} / {{ event.eventvenue.venuecapacity }}</label>
+  <progress id="progress" max="{{ event.eventvenue.venuecapacity }}" value="{{ event.ticketsold }}"></progress>
+  <h2>{{ event.eventname }}</h2>
+  <p>{{ event.eventdescription }}</p>
+  <p>{{ event.eventdate }}</p>
+  <p>Location: {{ event.location }}</p>
+  <p>Time: {{ event.eventtime }}</p>
+  <p>Price: {{ event.ticketprice }}</p>
+  {% for artist in event.EventArtists.all %}
+  <p>Artist: <a href="{% url 'artistprofile' artist.id %}">{{ artist.user.profilename }}</a></p>
+  {% endfor %}
+  <p>Venue: <a href="{% url 'venueprofile' event.eventvenue.id %}">{{ event.eventvenue }}</a></p>
+  <form method="post" action="{% url 'buyticket' event.id %}">
+    {% csrf_token %}
+    <button type="submit">Buy Ticket</button>
+  </form>
 </div>
 {% endblock %}

@@ -30,7 +30,6 @@ urlpatterns = [
     path("events/", views.events, name="events"),
     path("events/event/<int:event_id>/", views.event, name="event"),
     path("events/event/<int:event_id>/buy/", views.buyticket, name="buyticket"),
-    path("about/", views.about, name="about"),
     path("profile/", views.profile, name="profile"),
     path("profile/ticket/<int:ticketnumber>", views.ticketdetails, name="ticket"),
     path('profile/edit/', views.editprofile, name="editprofile"),

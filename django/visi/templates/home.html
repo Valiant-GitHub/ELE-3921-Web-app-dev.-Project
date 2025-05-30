@@ -4,6 +4,20 @@
     {% if user.role == "fan"%}
     <div class="cards">
         <div class="tickets">
+            <h3>Events from your followed artists</h3>
+
+            {% for event in eventsfromfollowed %}
+            <div class="card">
+                <a href="{% url 'event' event.id %}">
+                    <strong>{{ event.eventname }}</strong> at
+                    <strong>{{ event.eventdate }}</strong>
+                </a>
+            </div>
+            {% empty %}
+            <p>No events found.</p>
+            {% endfor %}
+        </div>
+        <div class="tickets">
             <h3>Your tickets</h3>
 
             {% for ticket in user.fan_user.tickets.all %}

@@ -14,7 +14,9 @@ from django.utils import timezone
 
 # --View for home--#
 def home(request):
-    return render(request, "home.html")
+    favartists = Artist.objects.filter(user__in=request.user.fan_user.favartists.all())
+    eventsfromfollowed = Events.objects.filter(EventArtists__in=favartists).distinct()
+    return render(request, "home.html", {"eventsfromfollowed": eventsfromfollowed})
 
 
 # --View for events--#
@@ -556,11 +558,13 @@ def photoupload(request):
     if request.method == "POST":
         form = Photoreel(request.POST, request.FILES)
         if form.is_valid():
-            if 'image' in request.FILES and request.FILES['image']:
+            if "image" in request.FILES and request.FILES["image"]:
                 photo = form.save(commit=False)
                 photo.user = request.user
                 photo.save()
-                messages.success(request, "Photo uploaded successfully! Upload another?")
+                messages.success(
+                    request, "Photo uploaded successfully! Upload another?"
+                )
                 return redirect("photoupload")
             else:
                 messages.error(request, "Please select a file to upload.")

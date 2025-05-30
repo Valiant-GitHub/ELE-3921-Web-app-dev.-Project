@@ -57,7 +57,7 @@ class ArtistProfileForm(forms.ModelForm):
 
 
 class VenueProfileForm(forms.ModelForm):
-    address = forms.CharField(max_length=100, required=True, label="Address")
+    address = forms.CharField(max_length=100, required=True, label="Street")
     zip = forms.CharField(max_length=6, required=True, label="Zip Code")
     city = forms.CharField(max_length=20, required=True, label="City")
     country = forms.CharField(max_length=20, required=True, label="Country")

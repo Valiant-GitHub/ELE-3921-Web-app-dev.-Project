@@ -1,0 +1,176 @@
+<script>
+    /**
+     * @license
+     * Copyright 2024 Google LLC. All Rights Reserved.
+     * SPDX-License-Identifier: Apache-2.0
+     */
+    async function init() {
+        await customElements.whenDefined('gmp-map');
+
+        const map = document.querySelector("gmp-map");
+        const marker = document.getElementById("marker");
+        const strictBoundsInputElement = document.getElementById("use-strict-bounds");
+        const placePicker = document.getElementById("place-picker");
+        const infowindowContent = document.getElementById("infowindow-content");
+        const infowindow = new google.maps.InfoWindow();
+
+        map.innerMap.setOptions({ mapTypeControl: false });
+        infowindow.setContent(infowindowContent);
+
+        placePicker.addEventListener('gmpx-placechange', () => {
+            const place = placePicker.value;
+
+            if (!place.location) {
+                window.alert(
+                    "No details available for input: '" + place.name + "'"
+                );
+                infowindow.close();
+                marker.position = null;
+                return;
+            }
+
+            if (place.viewport) {
+                map.innerMap.fitBounds(place.viewport);
+            } else {
+                map.center = place.location;
+                map.zoom = 17;
+            }
+
+            marker.position = place.location;
+            infowindowContent.children["place-name"].textContent = place.displayName;
+            infowindowContent.children["place-address"].textContent = place.formattedAddress;
+            infowindow.open(map.innerMap, marker);
+        });
+
+
+        setupClickListener("changetype-all", "");
+        setupClickListener("changetype-address", "address");
+        setupClickListener("changetype-establishment", "establishment");
+        setupClickListener("changetype-geocode", "geocode");
+        setupClickListener("changetype-cities", "(cities)");
+        setupClickListener("changetype-regions", "(regions)");
+
+        strictBoundsInputElement.addEventListener("change", () => {
+            placePicker.strictBounds = strictBoundsInputElement.checked;
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+</script>
+<script>
+async function init() {
+    await customElements.whenDefined('gmp-map');
+    const placePicker = document.getElementById("place-picker");
+
+    if (placePicker) {
+        placePicker.addEventListener('gmpx-placechange', () => {
+            const place = placePicker.value;
+            let street = "";
+            let city = "";
+            let country = "";
+            let zip = "";
+
+            if (place.addressComponents) {
+                for (const comp of place.addressComponents) {
+                    if (comp.types.includes("street_number")) streetNumber = comp.longText;
+                    if (comp.types.includes("route")) street = comp.longText; 
+                    if (comp.types.includes("postal_town")) city = comp.longText;
+                    if (comp.types.includes("country")) country = comp.longText;
+                    if (comp.types.includes("postal_code")) zip = comp.longText;
+                }
+            }
+            street = streetNumber ? `${street} ${streetNumber}` : street;
+
+            // Fill Django form fields if they exist
+            if (document.getElementById('id_address')) document.getElementById('id_address').value = street;
+            if (document.getElementById('id_city')) document.getElementById('id_city').value = city;
+            if (document.getElementById('id_country')) document.getElementById('id_country').value = country;
+            if (document.getElementById('id_zip')) document.getElementById('id_zip').value = zip;
+        });
+    }
+}
+document.addEventListener('DOMContentLoaded', init);
+</script>
+<style>
+    /**
+       * @license
+       * Copyright 2024 Google LLC. All Rights Reserved.
+       * SPDX-License-Identifier: Apache-2.0
+       */
+
+    /*
+       * Optional: Makes the sample page fill the window.
+       */
+    #map {
+        height: 50vh;
+        width: 100%;
+    }
+
+    /*
+       * Prevent a flash of unstyled content before the custom element is defined.
+       */
+    gmp-map:not(:defined) {
+        display: none;
+    }
+
+    #title {
+        color: #fff;
+        background-color: #4d90fe;
+        font-size: 25px;
+        font-weight: 500;
+        padding: 6px 12px;
+    }
+
+    #infowindow-content {
+        display: none;
+    }
+
+    .pac-card {
+        background-color: #fff;
+        border-radius: 2px;
+        box-shadow: 0 1px 4px -1px rgba(0, 0, 0, 0.3);
+        margin: 10px;
+        font: 400 18px Roboto, Arial, sans-serif;
+        overflow: hidden;
+    }
+
+    .pac-controls {
+        display: inline-block;
+        padding: 5px 11px;
+    }
+
+    .pac-controls label {
+        font-size: 13px;
+        font-weight: 300;
+    }
+
+    #place-picker {
+        box-sizing: border-box;
+        width: 100%;
+        padding: 0.5rem 1rem 1rem;
+    }
+</style>
+
+<!--
+     This loads helper components from the Extended Component Library,
+     https://github.com/googlemaps/extended-component-library.
+    -->
+<script type="module"
+    src="https://ajax.googleapis.com/ajax/libs/@googlemaps/extended-component-library/0.6.11/index.min.js">
+    </script>
+<gmpx-api-loader key="AIzaSyDO3rVUaj9euocyf9N_YInqxT1uTploBSk" solution-channel="GMP_CCS_autocomplete_v5">
+</gmpx-api-loader>
+<gmp-map id="map" center="40.749933,-73.98633" zoom="13" map-id="DEMO_MAP_ID">
+    <div slot="control-block-start-inline-start" class="pac-card" id="pac-card">
+        <div>
+            <div id="title">Search your address</div>
+            <div id="strict-bounds-selector" class="pac-controls"></div>
+        </div>
+        <gmpx-place-picker id="place-picker" for-map="map"></gmpx-place-picker>
+    </div>
+    <gmp-advanced-marker id="marker"></gmp-advanced-marker>
+</gmp-map>
+<div id="infowindow-content">
+    <span id="place-name" class="title" style="font-weight: bold;"></span><br />
+    <span id="place-address"></span>
+</div>

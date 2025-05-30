@@ -3,6 +3,9 @@
 {% block content %}
 <div class="container">
     <h1>Create Your Profile</h1>
+    {% if user.role == "venue" %}
+    {% include "mapspartial.html" %}
+    {% endif %}
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}

@@ -32,6 +32,12 @@ nav ul li a:hover {
   background-color: #28bbff;
 }
 
+.tickets {
+  flex: 1;
+  min-width: 260px;
+  max-width: 340px;
+}
+
 body {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   background: linear-gradient(rgb(255, 255, 255), rgb(255, 255, 255));

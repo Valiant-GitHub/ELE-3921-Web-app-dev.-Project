@@ -1,5 +1,45 @@
 {% extends "base.html" %}
 {% block content %}
+<div class="container">
+    {% if user.role == "fan"%}
+    <div class="cards">
+        <div class="tickets">
+            <h3>Your tickets</h3>
 
+            {% for ticket in user.fan_user.tickets.all %}
+
+            <div class="card"> <a href="{% url 'ticket' ticket.id %}"><strong>{{ ticket.event.eventname }}</strong> at
+                    <strong>{{ ticket.event.eventdate }}</strong></a></div>
+
+            {% empty %}
+            <p>No tickets found.</p>
+            {% endfor %}
+        </div>
+    </div>
+    {%elif user.role == "artist" or user.role == "venue"%}
+    <meta http-equiv="REFRESH" content="0; url={% url 'dashboard' %}">
+
+
+
+    {%else%}
+    <h1>Welcome to the website!</h1>
+    <div class="cards">
+        <div class="card">
+            <h3>The place for matching connecting the right people</h3>
+            <p>Whether you are a fan, artist, or venue, we have something for you.<br><br>
+                Explore events, connect with artists, and discover venues that suit your taste.<br><br>
+                Join us in creating a vibrant community of music lovers and performers.</p>
+        </div>
+        <div class="card">
+            <h3>Get Started</h3>
+            <p>Sign up now to start exploring events, purchasing tickets, and connecting with artists and venues.</p>
+            <button><a href="{% url 'signup' %}">Sign Up</a></button>
+            <p>or</p>
+            <button><a href="{% url 'login' %}">Login</a></button>
+        </div>
+    </div>
+
+    {% endif %}
+</div>
 
 {% endblock %}

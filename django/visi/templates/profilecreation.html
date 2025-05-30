@@ -1,6 +1,29 @@
 {% extends "base.html" %}
 
 {% block content %}
+<style>
+form {
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(33, 134, 166, 0.10), 0 1.5px 6px rgba(0, 0, 0, 0.04);
+  margin: 2rem auto;
+  padding: 2.5rem 2rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+form input, select{
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+form label {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+</style>
 <div class="container">
     <h1>Create Your Profile</h1>
     {% if user.role == "venue" %}

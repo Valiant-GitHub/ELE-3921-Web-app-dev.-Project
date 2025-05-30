@@ -11,22 +11,28 @@ from django.utils import timezone
 
 # Create your views here.
 
-#--View for home--#
+
+# --View for home--#
 def home(request):
     return render(request, "home.html")
 
-#--View for events--#
+
+# --View for events--#
 def events(request):
     events = Events.objects.filter(eventdate__gte=timezone.now()).order_by("eventdate")
-    pastevents = Events.objects.filter(eventdate__lt=timezone.now()).order_by("-eventdate")
+    pastevents = Events.objects.filter(eventdate__lt=timezone.now()).order_by(
+        "-eventdate"
+    )
     return render(request, "events.html", {"events": events, "pastevents": pastevents})
 
-#--View for specific events--#
+
+# --View for specific events--#
 def event(request, event_id):
     event = get_object_or_404(Events, id=event_id)
     return render(request, "event.html", {"event": event})
 
-#--View for ticket purchasing--#
+
+# --View for ticket purchasing--#
 @login_required
 def buyticket(request, event_id):
     event = get_object_or_404(Events, id=event_id)
@@ -57,14 +63,14 @@ def buyticket(request, event_id):
     return HttpResponse("Theres an issue.")
 
 
-
-#--View for user profile--#
+# --View for user profile--#
 @profile_required
 @login_required
 def profile(request):
     return render(request, "profile.html")
 
-#--View for signup--#
+
+# --View for signup--#
 def signup(request):
     if request.method == "POST":
         form = SignUpForm(request.POST, request.FILES)
@@ -76,7 +82,8 @@ def signup(request):
         form = SignUpForm()
     return render(request, "signup.html", {"form": form})
 
-#--View for ticket--#
+
+# --View for ticket--#
 @login_required
 def ticketdetails(request, ticketnumber):
     ticket = get_object_or_404(Tickets, id=ticketnumber)
@@ -85,7 +92,8 @@ def ticketdetails(request, ticketnumber):
 
     return render(request, "ticket.html", {"ticket": ticket})
 
-#--View for profile creation--#
+
+# --View for profile creation--#
 @login_required
 def createprofile(request):
     user = request.user
@@ -138,7 +146,8 @@ def save(self, commit=True):
         instance.save()
     return instance
 
-#--View for posting availability--#
+
+# --View for posting availability--#
 @profile_required
 @login_required
 @role_required(["artist", "venue"])
@@ -153,7 +162,8 @@ def availability(request):
 
     return render(request, "availabilityform.html", {"form": form})
 
-#--View for editing profile--#
+
+# --View for editing profile--#
 @profile_required
 @login_required
 def editprofile(request):
@@ -193,20 +203,23 @@ def editprofile(request):
         },
     )
 
-#--View for success page for posting availability--#
+
+# --View for success page for posting availability--#
 @profile_required
 @login_required
 @role_required(["artist", "venue"])
 def availability_success(request):
     return render(request, "availabilitysuccess.html")
 
-#--View for artist public profile--#
+
+# --View for artist public profile--#
 def artistprofile(request, artist_id):
     artist = get_object_or_404(Artist, id=artist_id)
     events = Events.objects.filter(EventArtists=artist)
     return render(request, "artistprofile.html", {"artist": artist, "events": events})
 
-#--View for venue public profile--#
+
+# --View for venue public profile--#
 def venueprofile(request, venue_id):
     venue = get_object_or_404(Venue, id=venue_id)
     events = Events.objects.filter(eventvenue=venue)
@@ -217,7 +230,8 @@ def venueprofile(request, venue_id):
         {"venue": venue, "events": events, "photoreel": photoreel},
     )
 
-#--View for availabilites--#
+
+# --View for availabilites--#
 @profile_required
 @login_required
 @role_required(["artist", "venue"])
@@ -225,7 +239,8 @@ def available(request):
     availabilities = Availability.objects.all().order_by("start_time")
     return render(request, "available.html", {"availabilities": availabilities})
 
-#--View for requesting to book--#
+
+# --View for requesting to book--#
 @profile_required
 @login_required
 @role_required(["artist", "venue"])
@@ -257,14 +272,16 @@ def requestbooking(request, availability_id):
         form = BookingForm()
     return render(request, "booking.html", {"form": form, "availability": availability})
 
-#--View for showing successful booking--#
+
+# --View for showing successful booking--#
 @profile_required
 @login_required
 @role_required(["artist", "venue"])
 def bookingsuccess(request):
     return render(request, "bookingsuccess.html")
 
-#--View for dashboard--#
+
+# --View for dashboard--#
 @profile_required
 @login_required
 @role_required(["artist", "venue"])
@@ -333,7 +350,8 @@ def dashboard(request):
         },
     )
 
-#--View for details on availability--#
+
+# --View for details on availability--#
 @profile_required
 @login_required
 @role_required(["artist", "venue"])
@@ -381,7 +399,8 @@ def listingdetail(request, listing_id, listing_type):
         {"listing": listing, "listing_type": listing_type},
     )
 
-#--View for booking--#
+
+# --View for booking--#
 def handlebookingaction(request):
     if request.method == "POST":
         booking_id = request.POST.get("booking_id")
@@ -398,7 +417,8 @@ def handlebookingaction(request):
 
     return redirect("dashboard")
 
-#--View for showing users events--#
+
+# --View for showing users events--#
 @profile_required
 @login_required
 @role_required(["artist", "venue"])
@@ -419,7 +439,8 @@ def myevents(request):
 
     return render(request, "myevents.html", {"events": events})
 
-#--View for creating event--#
+
+# --View for creating event--#
 @profile_required
 @login_required
 @role_required(["artist", "venue"])
@@ -527,3 +548,22 @@ def createevent(request):
         "createevent.html",
         {"form": form, "booking": booking, "availability": availability},
     )
+
+
+# --View for photo uploads--#
+@role_required("venue")
+def photoupload(request):
+    if request.method == "POST":
+        form = Photoreel(request.POST, request.FILES)
+        if form.is_valid():
+            if 'image' in request.FILES and request.FILES['image']:
+                photo = form.save(commit=False)
+                photo.user = request.user
+                photo.save()
+                messages.success(request, "Photo uploaded successfully! Upload another?")
+                return redirect("photoupload")
+            else:
+                messages.error(request, "Please select a file to upload.")
+    else:
+        form = Photoreel()
+    return render(request, "uploadphoto.html", {"form": form})

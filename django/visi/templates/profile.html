@@ -100,7 +100,7 @@
     </div>
 
     {% elif user.role == "venue"%}
-    <a href="{% url 'venueprofile' user.venue_user.id %}">Show public profile</a>
+    <a class="button" href="{% url 'venueprofile' user.venue_user.id %}">Show public profile</a> <a href="{% url 'photoupload' %}">Upload photos</a>
 
     <div class="venueinfo">
         <h1>Your venue information:</h1>

@@ -51,5 +51,7 @@ urlpatterns = [
     path('myevents/', views.myevents, name='myevents'),
     path('createevent/', views.createevent, name='createevent'),
     path('bookingaction/', views.handlebookingaction, name='bookingaction'),
+    path('venue/upload-photo/', views.photoupload, name='photoupload'),
+
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -121,11 +121,8 @@
                 {% endif %}
             </div>
             <div class="form-group col-md-6">
-                <label for="{{ form.doorman.id_for_label }}">Doorman:</label>
-                {{ form.doorman }}
-                {% if form.doorman.errors %}
-                <div class="error text-danger">{{ form.doorman.errors }}</div>
-                {% endif %}
+                <label for="{{ form.authorized_doormen.id_for_label }}">Doorman:</label>
+                {{ form.authorized_doormen }}
             </div>
         </div>
 

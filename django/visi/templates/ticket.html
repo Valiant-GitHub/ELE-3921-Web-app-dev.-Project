@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load qr_code %}
 {% block content %}
 <div class="container">
     <h1>Ticket Details</h1>
@@ -9,5 +9,7 @@
     <p><strong>Location:</strong> {{ ticket.event.location }}</p>
     <p><strong>Ticket Number:</strong> {{ ticket.ticketnumber }}</p>
     <p><strong>Used:</strong> {{ ticket.is_used|yesno:"Yes,No" }}</p>
+        {% qr_from_text ticket.ticketnumber size="m" %} 
+
 </div>
 {% endblock %}

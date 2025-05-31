@@ -30,6 +30,8 @@
             <li><a href="{% url 'availabilityform' %}">Availability Form</a></li>
             <li><a href="{% url 'available' %}">Available for events</a></li>
             <li><a href="{% url 'myevents' %}">My events</a></li>
+            {% elif user.role == "doorman"%}
+            <li><a href="{%url 'ticketvalidation'%}">Validate tickets</a></li>
             {% endif %}
         </ul>
     </nav>

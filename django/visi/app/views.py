@@ -524,6 +524,8 @@ def createevent(request):
             # Add artist if exists (either from availability or requester)
             if actual_artist:
                 event.EventArtists.add(actual_artist)
+            
+
             # Delete booking and availability
             booking.delete()
             availability.delete()
@@ -576,3 +578,37 @@ def photoupload(request):
     else:
         form = Photoreel()
     return render(request, "uploadphoto.html", {"form": form})
+
+# --View for ticket validation--#
+@role_required("doorman")
+def ticketvalidation(request):
+    if request.method == "POST":
+        ticket_number = request.POST.get("ticket_number")
+        try:
+            ticket = Tickets.objects.select_related("fan__user", "event").get(ticketnumber=ticket_number)
+            event = ticket.event
+            doorman = request.user.doorman_user
+            if not event.authorized_doormen.filter(id=doorman.id).exists():
+                messages.error(request, "You are not authorized to validate tickets for this event.")
+                return redirect("ticketvalidation")
+            return redirect("validateticket", ticket_id=ticket.id)
+        except Tickets.DoesNotExist:
+            messages.error(request, "Ticket not found.")
+    return render(request, "ticketvalidation.html")
+
+@role_required("doorman")
+def validateticket(request, ticket_id):
+    ticket = get_object_or_404(Tickets, id=ticket_id)
+    event = ticket.event
+    doorman = request.user.doorman_user
+    if not event.authorized_doormen.filter(id=doorman.id).exists():
+        messages.error(request, "You are not authorized to validate tickets for this event.")
+        return redirect("ticketvalidation")
+    if request.method == "POST":
+        if not ticket.is_used:
+            ticket.is_used = True
+            ticket.save()
+            messages.success(request, "Ticket validated")
+        else:
+            messages.info(request, "Ticket was already used.")
+    return render(request, "validateticket.html", {"ticket": ticket})

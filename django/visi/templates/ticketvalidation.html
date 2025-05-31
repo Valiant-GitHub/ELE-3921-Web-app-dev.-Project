@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+        {% endfor %}{% endif %}
+        <div class="container">
+            <h2>Ticket Validation</h2>
+            <div id="qr-reader" style="width:100%"></div>
+            <form id="ticket-form" method="post" style="display:none;">
+                {% csrf_token %}
+                <input type="hidden" name="ticket_number" id="ticket_number">
+            </form>
+        </div>
+        <script src="https://unpkg.com/html5-qrcode"></script>
+        <script>
+            function onScanSuccess(decodedText, decodedResult) {
+                document.getElementById('ticket_number').value = decodedText;
+                document.getElementById('ticket-form').submit();
+            }
+            let html5QrcodeScanner = new Html5QrcodeScanner(
+                "qr-reader", { fps: 10, qrbox: 250 });
+            html5QrcodeScanner.render(onScanSuccess);
+        </script>
+        {% endblock %}

@@ -148,7 +148,6 @@ class BookingForm(forms.ModelForm):
 
 
 class EventForm(forms.ModelForm):
-    doorman = forms.ModelChoiceField(queryset=Doorman.objects.all(),required=False,)
     class Meta:
         model = Events
         fields = [
@@ -161,7 +160,7 @@ class EventForm(forms.ModelForm):
             "eventvenue",
             "ticketprice",
             "genres",
-            "doorman"
+            "authorized_doormen"
         ]
         widgets = {
             "eventdate": forms.DateInput(attrs={"type": "date"}),

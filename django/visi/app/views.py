@@ -14,9 +14,14 @@ from django.utils import timezone
 
 # --View for home--#
 def home(request):
-    favartists = Artist.objects.filter(user__in=request.user.fan_user.favartists.all())
-    eventsfromfollowed = Events.objects.filter(EventArtists__in=favartists).distinct()
-    return render(request, "home.html", {"eventsfromfollowed": eventsfromfollowed})
+    if not request.user.is_authenticated:
+        return render(request, "home.html")
+    if hasattr(request.user, "fan_user"):
+        favartists = Artist.objects.filter(user__in=request.user.fan_user.favartists.all())
+        eventsfromfollowed = Events.objects.filter(EventArtists__in=favartists).distinct()
+        return render(request, "home.html", {"eventsfromfollowed": eventsfromfollowed})
+    else:
+        return render(request, "home.html")
 
 
 # --View for events--#

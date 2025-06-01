@@ -33,7 +33,26 @@
     {%elif user.role == "artist" or user.role == "venue"%}
     <meta http-equiv="REFRESH" content="0; url={% url 'dashboard' %}">
 
-
+    {% elif user.role == "doorman" %}
+    <div class="cards">
+        <div class="card">
+            <h3>The place for matching connecting the right people</h3>
+            <p>Whether you are a fan, artist, or venue, we have something for you.<br><br>
+                Explore events, connect with artists, and discover venues that suit your taste.<br><br>
+                Join us in creating a vibrant community of music lovers and performers.</p>
+        </div>
+        <div class="tickets">
+            <h3>Events you can verify tickets for:</h3>
+            {% for event in user.doorman_user.events.all %}
+            <div class="card">
+                <a href="{% url 'event' event.id %}">
+                    <strong>{{ event.eventname }}</strong> at
+                    <strong>{{ event.eventdate }}</strong>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 
     {%else%}
     <h1>Welcome to the website!</h1>

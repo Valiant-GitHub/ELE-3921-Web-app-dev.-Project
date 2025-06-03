@@ -129,6 +129,7 @@ def createprofile(request):
             profile = form.save(commit=False)
             profile.user = user
             profile.save()
+            form.save_m2m()
             return redirect("home")
     else:
         form = form_class()

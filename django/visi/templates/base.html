@@ -33,6 +33,11 @@
             {% elif user.role == "doorman"%}
             <li><a href="{%url 'ticketvalidation'%}">Validate tickets</a></li>
             {% endif %}
+            {% if user.role == "venue" %}
+            <li><a href="{% url 'photoupload' %}">Upload photos</a></li>
+            {% endif %}
+            
+
         </ul>
     </nav>
     {% block content %}

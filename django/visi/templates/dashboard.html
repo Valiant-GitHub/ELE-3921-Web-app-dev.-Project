@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="container">
 <h2>Dashboard</h2>
 <div id="calendar"></div>
 <h3>Your Availability Slots</h3>
@@ -89,7 +90,7 @@
 {% else %}
 <p>No pending booking requests.</p>
 {% endif %}
-
+</div>
 <!-- Include FullCalendar -->
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>

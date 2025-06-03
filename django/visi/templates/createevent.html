@@ -19,8 +19,7 @@
         </p>
 
         <p>
-            <strong>Date/Time:</strong> {{ availability.start_time|date:"l, F j, Y" }} at {{
-            availability.start_time|time:"g:i A" }}
+            <strong>Date/Time:</strong> {{ availability.start_time|date:"l, F j, Y" }} at {{ availability.start_time|time:"g:i A" }}
         </p>
 
         {% if form.eventvenue.value %}
@@ -81,14 +80,14 @@
         </div>
 
         <div class="form-row mb-3">
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-6" style="display: none;">
                 <label for="{{ form.eventvenue.id_for_label }}">Venue:</label>
                 {{ form.eventvenue }}
                 {% if form.eventvenue.errors %}
                 <div class="error text-danger">{{ form.eventvenue.errors }}</div>
                 {% endif %}
             </div>
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-6" style="display: none;">
                 <label for="{{ form.location.id_for_label }}">Location:</label>
                 {{ form.location }}
                 {% if form.location.errors %}

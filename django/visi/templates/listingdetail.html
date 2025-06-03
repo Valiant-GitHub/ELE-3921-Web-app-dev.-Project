@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="container">
 <h2>{{ listing_type|capfirst }} Details</h2>
 
 {% if listing_type == 'availability' %}
@@ -52,4 +53,5 @@ Only shows if the current user is the artist or venue owner of the listing
 {% endif %}
 
 <a href="javascript:history.back()">Go Back</a>
+</div>
 {% endblock %}

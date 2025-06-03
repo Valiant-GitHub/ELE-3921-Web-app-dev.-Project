@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="container">
 <h2>Request Booking</h2>
 <p>
     {% if availability.type == 'artist' %}
@@ -18,4 +19,5 @@
     {{ form.as_p }}
     <button type="submit">Submit Request</button>
 </form>
+</div>
 {% endblock %}

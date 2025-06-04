@@ -138,7 +138,7 @@ class Availability(models.Model):
     )
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
-    description = models.TextField()
+    description = models.TextField(blank=True, null=True, max_length=1000)
 
     class Meta:
         constraints = [

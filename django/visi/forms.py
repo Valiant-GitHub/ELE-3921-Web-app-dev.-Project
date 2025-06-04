@@ -135,7 +135,7 @@ class ChangeProfilePic(forms.ModelForm):
         fields = ["profilepic"]
 
 
-class Photoreel(forms.ModelForm):
+class PhotoreelForm(forms.ModelForm):
     class Meta:
         model = Photoreel
         fields = ["image"]

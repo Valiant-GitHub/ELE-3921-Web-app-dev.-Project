@@ -13,5 +13,20 @@
         {{ form.as_p }}
         <button type="submit">Upload</button>
     </form>
+        <h2>Your Uploaded Photos</h2>
+    <div>
+        <div class="cards">
+        {% for photo in photoreel %}
+            <div class="card">
+                <img src="{{ photo.image.url }}" alt="Photo" style="width:150px; height:auto; display:block;">
+                <form method="post" action="{% url 'deletephoto' photo.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Delete</button>
+                </form>
+            </div>
+        {% empty %}
+            <p>No photos uploaded yet.</p>
+        {% endfor %}
+        </div>
 </div>
 {%endblock%}

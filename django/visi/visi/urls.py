@@ -52,6 +52,7 @@ urlpatterns = [
     path('createevent/', views.createevent, name='createevent'),
     path('bookingaction/', views.handlebookingaction, name='bookingaction'),
     path('venue/upload-photo/', views.photoupload, name='photoupload'),
+    path('venue/delete-photo/<int:photo_id>/', views.deletephoto, name='deletephoto'),   
     path("ticketvalidation/", views.ticketvalidation, name="ticketvalidation"),
     path("ticketvalidation/validate/<int:ticket_id>", views.validateticket, name="validateticket"),
 

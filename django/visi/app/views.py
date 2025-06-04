@@ -564,7 +564,7 @@ def createevent(request):
 @role_required("venue")
 def photoupload(request):
     if request.method == "POST":
-        form = Photoreel(request.POST, request.FILES)
+        form = PhotoreelForm(request.POST, request.FILES)
         if form.is_valid():
             if "image" in request.FILES and request.FILES["image"]:
                 photo = form.save(commit=False)
@@ -577,8 +577,17 @@ def photoupload(request):
             else:
                 messages.error(request, "Please select a file to upload.")
     else:
-        form = Photoreel()
-    return render(request, "uploadphoto.html", {"form": form})
+        form = PhotoreelForm()
+    photoreel = Photoreel.objects.filter(user=request.user)
+    return render(request, "uploadphoto.html", {"form": form, "photoreel": photoreel})
+# --View to delete photo--#
+@role_required("venue")
+def deletephoto(request, photo_id):
+    photo = get_object_or_404(Photoreel, id=photo_id, user=request.user)
+    if request.method == "POST":
+        photo.delete()
+        messages.success(request, "Photo deleted successfully.")
+    return redirect("photoupload")
 
 # --View for ticket validation--#
 @role_required("doorman")

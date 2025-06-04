@@ -382,7 +382,7 @@ def listingdetail(request, listing_id, listing_type):
             return redirect("dashboard")
         else:
             return HttpResponseForbidden("You are not allowed to delete this listing.")
-    # ...existing code...
+    
     return render(
         request,
         "listingdetail.html",

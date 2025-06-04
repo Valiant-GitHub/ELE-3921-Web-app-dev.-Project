@@ -137,24 +137,6 @@ def createprofile(request):
     return render(request, "profilecreation.html", {"form": form})
 
 
-def save(self, commit=True):
-    instance = super().save(commit=False)
-    # Debugging: Print the user and their role
-    print(f"Saving availability for user: {self.user}, role: {self.user.role}")
-
-    # Set the artist or venue based on the user's role
-    if self.user.role == "artist":
-        instance.artist = self.user.artist_user
-    elif self.user.role == "venue":
-        instance.venue = self.user.venue_user
-    else:
-        print("User role is not artist or venue.")
-
-    if commit:
-        instance.save()
-    return instance
-
-
 # --View for posting availability--#
 @profile_required
 @login_required
